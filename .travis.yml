@@ -9,9 +9,8 @@ before_script:
 - npm install -g gulp
 - npm install -g gulp-util
 - npm install -g nw-builder
-script: gulp
-before_deploy:
 - npm version patch
+script: gulp
 deploy:
   provider: npm
   email: santiago.vdk@gmail.com
