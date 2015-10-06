@@ -1,7 +1,7 @@
 {
   "name": "odyssey-client",
   "version": "1.0.1",
-  "description": "Odyssey Music APP Client",
+  "description": "Odyssey Client",
   "main": "index.html",
   "keywords": [
 	"node",
