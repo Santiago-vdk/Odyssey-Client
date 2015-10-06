@@ -6,6 +6,9 @@
   { "type" : "git"
   , "url" : "https://github.com/Santiago-vdk/Odyssey-Client.git"
   },
+  "scripts": {
+  "test": "echo \"Error: no test specified.\""
+  },
   "author": "Santiago Vargas de Kruijf",
   "license": "MIT",
   "devDependencies": {
