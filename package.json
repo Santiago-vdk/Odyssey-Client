@@ -1,0 +1,14 @@
+{
+  "name": "odysseyclient",
+  "version": "1.0.0",
+  "description": "Odyssey Music APP Client",
+  "main": "index.html",
+  "window": {
+    "toolbar": true
+  },
+  "scripts": {
+    "test": "\"echo \\\"Error: no test specified\\\" && exit 1\""
+  },
+  "author": "Santiago Vargas de Kruijf",
+  "license": "MIT"
+}
