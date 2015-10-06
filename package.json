@@ -1,7 +1,13 @@
 {
-  "name": "odysseyclient",
-  "version": "1.0.0",
+  "name": "odyssey-client",
+  "version": "1.0.1",
   "description": "Odyssey Music APP Client",
+  "main": "index.html",
+  "keywords": [
+	"node",
+	"webkit",
+	"odyssey"
+  ],
   "repository" :
   { "type" : "git"
   , "url" : "https://github.com/Santiago-vdk/Odyssey-Client.git"
@@ -9,6 +15,17 @@
   "scripts": {
   "test": "echo \"Error: no test specified.\""
   },
+  "window": {
+        "toolbar": false,
+        "resizable": true,
+        "width": 1000,
+        "height": 600,
+        "min_width": 600,
+        "min_height": 400,
+        "max_width": 1000,
+        "max_height": 600,
+        "position": "center"
+   },
   "author": "Santiago Vargas de Kruijf",
   "license": "MIT",
   "devDependencies": {
