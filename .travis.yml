@@ -11,5 +11,6 @@ node_js:
 before_script:
   - npm install -g gulp
 script: gulp
+script: "sudo $(which npm) test"
 # uncomment this line if your project needs to run something other than `rake`:
 # script: bundle exec rspec spec
