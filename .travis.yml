@@ -6,11 +6,10 @@ node_js:
   - "0.11"
   - "0.10"
   - "0.8"
-  - "0.6"
-  - "iojs"
 before_script:
   - npm install -g gulp
+  - npm install -g gulp-util
+  - npm install -g nw-builder
 script: gulp
-script: "sudo $(which npm) test"
 # uncomment this line if your project needs to run something other than `rake`:
 # script: bundle exec rspec spec
