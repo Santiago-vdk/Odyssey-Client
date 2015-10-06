@@ -1,0 +1,9 @@
+{
+  "main": "index.html",
+  "name": "odysseyapp",
+  "description": "demo app of NW.js",
+  "version": "0.1.0",
+  "webkit": {
+    "plugin": true
+  }
+}

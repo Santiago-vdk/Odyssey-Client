@@ -10,5 +10,10 @@
     "test": "\"echo \\\"Error: no test specified\\\" && exit 1\""
   },
   "author": "Santiago Vargas de Kruijf",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-util": "^3.0.6",
+    "nw-builder": "^2.0.2"
+  }
 }
