@@ -2,6 +2,10 @@
   "name": "odysseyclient",
   "version": "1.0.0",
   "description": "Odyssey Music APP Client",
+  "repository" :
+  { "type" : "git"
+  , "url" : "https://github.com/Santiago-vdk/Odyssey-Client.git"
+  },
   "author": "Santiago Vargas de Kruijf",
   "license": "MIT",
   "devDependencies": {
