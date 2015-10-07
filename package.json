@@ -1,6 +1,6 @@
 {
   "name": "odyssey-client",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "Odyssey Client",
   "main": "index.html",
   "keywords": [
@@ -29,8 +29,8 @@
   "author": "Santiago Vargas de Kruijf",
   "license": "MIT",
   "dependencies": {
-    "gulp":"^3.9.0",
-	"gulp-util":"^3.0.6",
+    "gulp": "^3.9.0",
+    "gulp-util": "^3.0.6",
     "nw-builder": "^2.0.2"
   }
 }
