@@ -2,7 +2,7 @@
 
 [![NPM](https://nodei.co/npm/odyssey-client.png?downloads=true)](https://nodei.co/npm/odyssey-client/)
 
-> Odyssey Client desktop application, Lets you access Odyssey Cloud. We use [NW.js](https://github.com/nwjs/nw.js)
+> Odyssey Client desktop application, Lets you access Odyssey Cloud. We use [NW.js](https://github.com/nwjs/nw.js) to run our software.
 
 
 ### Installation with NPM and GULP
@@ -23,11 +23,13 @@ Can be `['win32', 'win64', 'osx32', 'osx64', 'linux32', 'linux64']`
 ##### Build Odyssey Client
 ```shell
 npm install odyssey-client
-cd /path/to/folder/node_modules/odyssey-client       //Usually the folder where you used the command or inside your personal folder.
+cd /path/to/folder/node_modules/odyssey-client/node_modules/.bin/       //Usually the folder where you used the command or inside your personal folder. 
 gulp nw
 ```
-1) This will generate a the directory /build/[win32],[win64],[osx32]/ choose the one you specifiend inside 'gulpfile.js'
-2) Open the app and go!
+#####If you have gulp installed globaly you can just cd to odyssey-client folder and do `gulp nw`
+
+> 1) This will generate a the directory /build/[win32],[win64],[osx32]/ choose the one you specifiend inside 'gulpfile.js'.
+> 2) Open the app and go!
 
 ##### Installation binary file.
 > Only finale and stable releases will be put here.
@@ -35,6 +37,7 @@ gulp nw
 - 2015-07-11 `expected first release.`
 
 ## Troubleshooting
+Everything seems alright. :)
 
 ## Release History
 - 2015-10-07    `0.0.2` Preview release.
