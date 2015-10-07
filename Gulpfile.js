@@ -4,10 +4,10 @@ var gutil = require('gulp-util');
 
 gulp.task('nw', function () {
 
- var nw = new NwBuilder({
-    files: './*', // use the glob format
+var nw = new NwBuilder({
+    files: './*', 
 	version: '0.12.3',
-    platforms: ['win32']
+    platforms: ['win32'] //Change or add here the desired SO.
 });
 
 //Log stuff you want
