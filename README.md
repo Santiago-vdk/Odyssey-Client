@@ -1,6 +1,6 @@
 # odyssey-client [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][depstat-image]][depstat-url]
 
-[![NPM](https://nodei.co/npm/nw-builder.png?downloads=true)](https://nodei.co/npm/nw-builder/)
+[![NPM](https://nodei.co/npm/odyssey-client.png?downloads=true)](https://nodei.co/npm/odyssey-client/)
 
 > Odyssey Client desktop application, Lets you access Odyssey Cloud. We use [NW.js](https://github.com/nwjs/nw.js)
 
