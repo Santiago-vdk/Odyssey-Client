@@ -28,11 +28,9 @@
   },
   "author": "Santiago Vargas de Kruijf",
   "license": "MIT",
-  "devDependencies": {
-    "gulp": "^3.9.0",
-    "nw-builder": "^2.0.2"
-  },
   "dependencies": {
-    "gulp-util": "^3.0.6"
+    "gulp":"^3.9.0",
+	"gulp-util":"^3.0.6",
+    "nw-builder": "^2.0.2"
   }
 }

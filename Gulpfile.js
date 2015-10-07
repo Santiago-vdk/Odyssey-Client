@@ -4,21 +4,24 @@ var gutil = require('gulp-util');
 
 gulp.task('nw', function () {
 
-    var nw = new NwBuilder({
-        version: '0.11.0',
-        files: './app/**',
-        platforms: ['win32']
-    });
+ var nw = new NwBuilder({
+    files: './*', // use the glob format
+	version: '0.12.3',
+    platforms: ['win32']
+});
 
-    // Log stuff you want
-    nw.on('log', function (msg) {
-        gutil.log('nw-builder', msg);
-    });
+//Log stuff you want
 
-    // Build returns a promise, return it so the task isn't called in parallel
-    return nw.build().catch(function (err) {
-        gutil.log('nw-builder', err);
-    });
+nw.on('log',  console.log);
+
+// Build returns a promise
+nw.build().then(function () {
+   console.log('all done!');
+}).catch(function (error) {
+    console.error(error);
+});
+	
+	
 });
 
 gulp.task('default', ['nw']);
