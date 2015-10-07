@@ -13,7 +13,7 @@
     "url": "https://github.com/Santiago-vdk/Odyssey-Client.git"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified.\""
+    "test": "echo \"Error: no test specified.\"",
   },
   "window": {
     "toolbar": false,
