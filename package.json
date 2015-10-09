@@ -16,21 +16,15 @@
     "test": "echo \"Error: no test specified.\""
   },
   "window": {
-    "toolbar": false,
-    "resizable": true,
-    "width": 1000,
-    "height": 600,
-    "min_width": 600,
-    "min_height": 400,
-    "max_width": 1000,
-    "max_height": 600,
-    "position": "center"
+    "toolbar": true
   },
   "author": "Santiago Vargas de Kruijf",
   "license": "MIT",
   "dependencies": {
+    "drag-and-drop-files": "0.0.1",
     "gulp": "^3.9.0",
     "gulp-util": "^3.0.6",
-    "nw-builder": "^2.0.2"
+    "nw-builder": "^2.0.2",
+    "sql.js": "^0.2.21"
   }
 }

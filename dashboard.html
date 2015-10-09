@@ -1,0 +1,105 @@
+<html>
+
+
+
+<script>
+    //get node webkit GUI
+    var gui = require('nw.gui');
+
+    // get the window object
+    var win = gui.Window.get();
+
+    win.on('loaded', function() {
+        // the native onload event has just occurred
+        var document = win.window.document;
+        var dropTarget = document.querySelector("#drop-zone");
+        require("drag-and-drop-files")(dropTarget, function(files) {
+            console.log("Got some files:", files)
+
+        })
+    });
+
+
+    win.setMinimumSize(720, 405);
+    win.setMaximumSize(3000, 1688);
+    win.width = 1280;
+    win.height = 720;
+
+
+
+    win.setPosition("center");
+    //win.Maximize();
+
+    var menubar = new gui.Menu({
+        type: 'menubar'
+    });
+    var file = new gui.Menu();
+    var subMenu = new gui.Menu();
+    file.append(new gui.MenuItem({
+        label: 'Action 1',
+        click: function() {
+            alert('Action 1 Clicked');
+        }
+    }));
+    file.append(new gui.MenuItem({
+        label: 'Action 2',
+        click: function() {
+            alert('Action 2 Clicked');
+        }
+    }));
+    subMenu.append(new gui.MenuItem({
+        label: 'SubMenu Action 1',
+        click: function() {
+            alert('SubMenu Action 1 Clicked');
+        }
+    }));
+    subMenu.append(new gui.MenuItem({
+        label: 'SubMenu Action 2',
+        click: function() {
+            alert('SubMenu Action 2 Clicked');
+        }
+    }));
+    menubar.append(new gui.MenuItem({
+        label: 'File',
+        submenu: file
+    }));
+    file.append(new gui.MenuItem({
+        label: 'Sub Action Menu',
+        submenu: subMenu
+    }));
+    win.menu = menubar;
+</script>
+
+<link href="assets/css/styleDashboard.css" rel="stylesheet">
+<script src="assets/js/jquery-2.1.4.js"></script>
+    
+<head>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="menu-bar"></div>
+        <div class="main-content">
+
+            <div class="music-library">
+                <div class="songs-zone">
+                    <p>songs zone</p>
+                </div>
+                <div id="drop-zone" class="dropzone">
+                    <p>drop zone</p>
+                </div>
+            </div>
+            <div class="version">
+                <p>drop zone</p>
+            </div>
+            <div class="frame">
+                <div class="main-social">
+                    <p>Social Area</p>
+                </div>
+            </div>
+        </div>
+        <div class="player">Player</div>
+
+    </div>
+</body>
+
+</html>
