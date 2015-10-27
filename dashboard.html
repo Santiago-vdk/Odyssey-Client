@@ -1,104 +1,125 @@
-<html>
+<html ng-app="odyssey">
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 
-
-
-<script>
-    //get node webkit GUI
-    var gui = require('nw.gui');
-
-    // get the window object
-    var win = gui.Window.get();
-
-    win.on('loaded', function() {
-        // the native onload event has just occurred
-        var document = win.window.document;
-        var dropTarget = document.querySelector("#drop-zone");
-        require("drag-and-drop-files")(dropTarget, function(files) {
-            console.log("Got some files:", files)
-
-        })
-    });
-
-
-    win.setMinimumSize(720, 405);
-    win.setMaximumSize(3000, 1688);
-    win.width = 1280;
-    win.height = 720;
-
-
-
-    win.setPosition("center");
-    //win.Maximize();
-
-    var menubar = new gui.Menu({
-        type: 'menubar'
-    });
-    var file = new gui.Menu();
-    var subMenu = new gui.Menu();
-    file.append(new gui.MenuItem({
-        label: 'Action 1',
-        click: function() {
-            alert('Action 1 Clicked');
-        }
-    }));
-    file.append(new gui.MenuItem({
-        label: 'Action 2',
-        click: function() {
-            alert('Action 2 Clicked');
-        }
-    }));
-    subMenu.append(new gui.MenuItem({
-        label: 'SubMenu Action 1',
-        click: function() {
-            alert('SubMenu Action 1 Clicked');
-        }
-    }));
-    subMenu.append(new gui.MenuItem({
-        label: 'SubMenu Action 2',
-        click: function() {
-            alert('SubMenu Action 2 Clicked');
-        }
-    }));
-    menubar.append(new gui.MenuItem({
-        label: 'File',
-        submenu: file
-    }));
-    file.append(new gui.MenuItem({
-        label: 'Sub Action Menu',
-        submenu: subMenu
-    }));
-    win.menu = menubar;
-</script>
-
-<link href="assets/css/styleDashboard.css" rel="stylesheet">
+<!-- jQuery -->
 <script src="assets/js/jquery-2.1.4.js"></script>
-    
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+<!-- NWJS Window -->
+<script src="assets/js/nwjs/dashboard.js"></script>
+
+<!-- SQLite Handler -->
+<script src="assets/js/storage.js"></script>
+
+<!-- Library Sync -->
+<script src="assets/js/sync.js"></script>
+
+<!-- Audio player and Stream handler -->
+<script src="assets/js/audiojs/audio.min.js"></script>
+<script src="assets/js/player.js"></script>
+
+<!-- Onmi Search -->
+<script src="assets/js/search.js"></script>
+
+<!-- Music Tree -->
+<link href="assets/css/tree/style.min.css" rel="stylesheet">
+<script src="assets/js/jstree.min.js"></script>
+<script src="assets/js/library.js"></script>
+
+<!-- Styling -->
+<link href="assets/css/styleDashboard.css" rel="stylesheet">
+<link href="assets/css/animate.css" rel="stylesheet">
+<script src="assets/js/dashboardEffects.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
+<!-- AngularJS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
+<script src="assets/js/user/hello.js"></script>
+
+
 <head>
 </head>
-<body>
-    <div class="wrapper">
-        <div class="menu-bar"></div>
-        <div class="main-content">
 
+<body>
+    <div id="search">
+        <button type="button" class="close">×</button>
+        <form>
+            <input type="search" value="" placeholder="Need something? Ask Omni :)"</i>/>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+    </div>
+
+    <div class="wrapper">
+
+        
+        <div class="menu-bar">
+            <nav class="navbar navbar-default" role="navigation">
+                <div class="container-fluid">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-header" ng-controller="Hello">
+                        <a class="navbar-brand" href="#">Hi, {{greeting.id}}</a>
+                    </div>
+                    
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav navbar-right">
+                            <li><a href="#search">Search</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        <div class="main-content">
             <div class="music-library">
                 <div class="songs-zone">
-                    <p>songs zone</p>
+
+                    <div id="jstree" style="float:left;">
+                        <!-- in this example the tree is populated from inline HTML -->
+                        <ul>
+                            <li id="root" data-jstree='{ "opened" : true,"icon":"fa fa-book"}'>Music Library 1
+                                <ul>
+                                    <li data-jstree='{ "icon":"fa fa-music" }'>Rayando el Sol - Mana</li>
+                                    <li data-jstree='{"icon":"fa fa-music" }'>Dig up her boner - Misfits</li>
+                                </ul>
+                            </li>
+                        </ul>
+                        
+                        
+                           <ul>
+                            <li id="root2" data-jstree='{"icon":"fa fa-book"}'>Music Library 2
+                                <ul>
+                                    <li data-jstree='{ "icon":"fa fa-music" }'>Rayando el Sol - Mana</li>
+                                    <li data-jstree='{"icon":"fa fa-music" }'>Dig up her boner - Misfits</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
                 </div>
                 <div id="drop-zone" class="dropzone">
-                    <p>drop zone</p>
+                    <h3 id="drag-drop-text" style="padding-top:30px">Drag & Drop.</h3>
                 </div>
             </div>
             <div class="version">
-                <p>drop zone</p>
+                <p>Publish</p>
+                <button type="button" class="btn btn-success"><a id="publish-btn" style="color:black">Publish this shit m8!</a></button>
             </div>
             <div class="frame">
                 <div class="main-social">
                     <p>Social Area</p>
+
                 </div>
             </div>
         </div>
-        <div class="player">Player</div>
+        <div class="player">
 
+           <audio id="music-player" src="http://localhost:9080/OdysseyCloud/api/v1/users/1/libraries/1/songs/1" type="audio/mpeg" preload="auto"></audio>
+        </div>
     </div>
 </body>
 

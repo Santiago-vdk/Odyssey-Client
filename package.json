@@ -22,9 +22,8 @@
   "license": "MIT",
   "dependencies": {
     "drag-and-drop-files": "0.0.1",
-    "gulp": "^3.9.0",
-    "gulp-util": "^3.0.6",
     "nw-builder": "^2.0.2",
-    "sql.js": "^0.2.21"
+	"gulp": "^3.9.0",
+    "gulp-util": "^3.0.6"
   }
 }
