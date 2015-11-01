@@ -1,13 +1,14 @@
 <html ng-app="odyssey">
 <!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet" href="assets/css/bootstrap.min.css">
 
 <!-- jQuery -->
 <script src="assets/js/jquery-2.1.4.js"></script>
-<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<!-- <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script> -->
+
 
 <!-- Latest compiled JavaScript -->
-<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="assets/js/bootstrap.min.js"></script>
 
 <!-- NWJS Window -->
 <script src="assets/js/nwjs/dashboard.js"></script>
@@ -34,10 +35,12 @@
 <link href="assets/css/styleDashboard.css" rel="stylesheet">
 <link href="assets/css/animate.css" rel="stylesheet">
 <script src="assets/js/dashboardEffects.js"></script>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+<link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
+<script src="assets/js/bootbox.min.js"></script>
 
 <!-- AngularJS -->
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
+<script src="https://code.angularjs.org/1.4.7/angular-route.min.js"></script>
 <script src="assets/js/user/hello.js"></script>
 
 
@@ -46,25 +49,26 @@
 
 <body>
     <div id="search">
-        <button type="button" class="close">×</button>
+        <button type="button" class="close">X</button>
         <form>
-            <input type="search" value="" placeholder="Need something? Ask Omni :)"</i>/>
-            <button type="submit" class="btn btn-primary">Search</button>
+            <input id="omni-text" autocomplete="off" type="search" value="" placeholder="Need something? Ask Omni :)" </i>
+            <button id="omni-search" type="submit" class="btn btn-primary">Search</button>
         </form>
     </div>
 
-    <div class="wrapper">
+    <div class="wrapper" ng-controller="Me">
 
-        
+
         <div class="menu-bar">
             <nav class="navbar navbar-default" role="navigation">
                 <div class="container-fluid">
                     <!-- Brand and toggle get grouped for better mobile display -->
-                    <div class="navbar-header" ng-controller="Hello">
-                        <a class="navbar-brand" href="#">Hi, {{greeting.id}}</a>
+                    <div class="navbar-header" style="overflow:hidden;">
+
+                        <a class="navbar-brand" href="{{'#/profile/' + me.id }}" style="background:#f8f8f8;">Hi, {{me.id}}</a>
                     </div>
-                    
-                    <!-- Collect the nav links, forms, and other content for toggling -->
+
+                    <!-- Collect the nav links, forms, and other content for toggling  <a class="navbar-brand"  style="background:#f8f8f8;">Hi, {{me.id}} </a>-->
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav navbar-right">
                             <li><a href="#search">Search</a></li>
@@ -80,45 +84,59 @@
 
                     <div id="jstree" style="float:left;">
                         <!-- in this example the tree is populated from inline HTML -->
+                        <!-- 
                         <ul>
-                            <li id="root" data-jstree='{ "opened" : true,"icon":"fa fa-book"}'>Music Library 1
-                                <ul>
+                            <li id="root" data-jstree='{"icon":"fa fa-book"}'>Music Library 1
+                              <ul>
                                     <li data-jstree='{ "icon":"fa fa-music" }'>Rayando el Sol - Mana</li>
                                     <li data-jstree='{"icon":"fa fa-music" }'>Dig up her boner - Misfits</li>
                                 </ul>
                             </li>
-                        </ul>
-                        
-                        
-                           <ul>
-                            <li id="root2" data-jstree='{"icon":"fa fa-book"}'>Music Library 2
-                                <ul>
-                                    <li data-jstree='{ "icon":"fa fa-music" }'>Rayando el Sol - Mana</li>
-                                    <li data-jstree='{"icon":"fa fa-music" }'>Dig up her boner - Misfits</li>
-                                </ul>
-                            </li>
-                        </ul>
+                        </ul> -->
                     </div>
 
                 </div>
+
+                <div class="vertical-separator-sidebar" id="side-horizontal-separator"></div>
+
+
                 <div id="drop-zone" class="dropzone">
                     <h3 id="drag-drop-text" style="padding-top:30px">Drag & Drop.</h3>
                 </div>
             </div>
             <div class="version">
-                <p>Publish</p>
-                <button type="button" class="btn btn-success"><a id="publish-btn" style="color:black">Publish this shit m8!</a></button>
-            </div>
-            <div class="frame">
-                <div class="main-social">
-                    <p>Social Area</p>
+                <h1>Friends</h1>
 
+
+                <div class="useravatar">
+                    <!-- ng-src="{{ 'http://api.adorable.io/avatars/285/' + x.user }}" -->
+
+                    <ul class="list-group">
+                        <li class="list-group-item" ng-repeat="x in me.friends"><a href="{{'#/profile/' + x.user }}">{{x.user}}<span><img alt="" ng-src="{{ 'http://api.adorable.io/avatars/285/' + x.user }}"></span></a></li>
+                    <br>
+                    </ul>
+                   
                 </div>
+
+
+
+                <!--<button type="button" class="btn btn-success"><a id="publish-btn" style="color:black">Publish this shit m8!</a></button> -->
+            </div>
+            <div class="frame" ng-view>
+
+
+
+
+                <!--    <div class="main-social" ></div> -->
+
+
+
+
             </div>
         </div>
         <div class="player">
 
-           <audio id="music-player" src="http://localhost:9080/OdysseyCloud/api/v1/users/1/libraries/1/songs/1" type="audio/mpeg" preload="auto"></audio>
+            <audio id="music-player" type="audio/mpeg" preload="auto"></audio>
         </div>
     </div>
 </body>

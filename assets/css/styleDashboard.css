@@ -2,22 +2,23 @@ html,
 body {
     margin: 0 !important;
     padding: 0 !important;
-    overflow: hidden;
+ 
     //background: -webkit-linear-gradient(90deg, #304352 10%, #d7d2cc 90%); /* Chrome 10+, Saf5.1+ */
     background: -webkit-linear-gradient(90deg, #ffb347 10%, #ffcc33 90%);
     /* Chrome 10+, Saf5.1+ */
     //background: -webkit-linear-gradient(90deg, #606c88 10%, #3f4c6b 90%); /* Chrome 10+, Saf5.1+ */
 }
-
 ::-webkit-scrollbar {
     width: 15px;
-} /* this targets the default scrollbar (compulsory) */
+}
+
+/* this targets the default scrollbar (compulsory) */
 
 ::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.2); 
-} /* this will style the thumb, ignoring the track */
+    background-color: rgba(0, 0, 0, 0.2);
+}
 
-
+/* this will style the thumb, ignoring the track */
 
 .wrapper {
     width: 100%;
@@ -28,10 +29,12 @@ body {
     border-bottom-color: #ccc;
     border-bottom-color: rgba(255, 255, 255, 0.2);
     background-color: rgba(255, 255, 255, 0.2);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 7px 5px rgba(0, 0, 0, 0.3);
     width: 100%;
     height: 50px;
     background: #FFC42C;
+    position: relative;
+    z-index: 5;
 }
 .main-content {
     width: 100%;
@@ -40,6 +43,7 @@ body {
     margin: 0;
     display: inline;
     position: fixed;
+    top: 53px;
 }
 .music-library {
     border-bottom: 1px solid;
@@ -53,6 +57,7 @@ body {
     width: 290px;
     line-height: 300%;
     height: 100%;
+    position: relative;
 }
 .dropzone {
     -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
@@ -61,7 +66,7 @@ body {
     background: white;
     width: 230;
     bottom: 60;
-    position: fixed;
+    position: relative;
     height: 120;
     text-align: center;
 }
@@ -77,14 +82,13 @@ body {
 .frame {
     display: flex;
     float: none;
-    height: 500px;
     height: 100%;
 }
 .version {
     border-bottom: 1px solid;
     border-bottom-color: #ccc;
     border-bottom-color: rgba(255, 255, 255, 0.2);
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: rgba(0, 0, 0, 0.78); //0.4  background-color: rgba(255, 255, 255, 0.78); 
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
     display: inline-block;
     float: right;
@@ -94,8 +98,10 @@ body {
     line-height: 300%;
     color: #FFFFFF;
     height: 100%;
+    position: relative;
+    /* overflow-y: scroll;
+    overflow-x: hidden;*/
 }
-
 #search {
     position: fixed;
     top: 0px;
@@ -158,8 +164,6 @@ body {
     padding: 10px 17px;
     font-size: 27px;
 }
-
-
 .player {
     background-color: #000000;
     filter: alpha(opacity=87);
@@ -168,42 +172,106 @@ body {
     -moz-box-shadow: 0px 0px 20px #000000;
     -webkit-box-shadow: 0px 0px 20px #000000;
     box-shadow: 0px 0px 20px #656565;
-   // height: 35px;
+    // height: 35px;
     width: 100%;
     position: absolute;
     left: 0;
     bottom: 0;
-    display:inline;
+    display: inline;
 }
-
-.audiojs{width:auto}
-.audiojs .time {  padding: 0px; padding-left: 15px; padding-right: 15px; }
-.audiojs .play-pause { width: 40px; }
-.audiojs .scrubber { width: 80%; }
-
-
+.audiojs {
+    width: auto
+}
+.audiojs .time {
+    padding: 0px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+.audiojs .play-pause {
+    width: 40px;
+}
+.audiojs .scrubber {
+    width: 80%;
+}
 .list {
-  font-family:sans-serif;
-  margin:0;
-  padding:0px;
-  text-align: left;
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0px;
+    text-align: left;
 }
 .list > li {
-  display:block;
-  background-color: #eee;
-  padding:2px;
-  box-shadow: inset 0 1px 0 gray;
-       
+    display: block;
+    background-color: #eee;
+    padding: 2px;
+    box-shadow: inset 0 1px 0 gray;
 }
-
 h5 {
-  font-size: 14px;
-  margin:0;
-  font-weight: normal;
- // font-weight:bold;
-  
+    font-size: 14px;
+    margin: 0;
+    font-weight: normal;
+    // font-weight:bold;
 }
 p {
-margin: 0 !important;
-
+    margin: 0 !important;
+}
+.vertical-separator-sidebar {
+    -webkit-user-select: none;
+    height: 8%;
+    position: static;
+}
+.useravatar img {
+    width: 50px;
+    height: 50px;
+    max-width: 50px;
+    max-height: 50px;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    border: 3px solid rgba(255, 255, 255, 0.5);
+    
+    z-index:5;
+}
+.useravatar .list-group-item {
+    padding-left: 5px;
+    padding-right: 15px;
+    padding-top: 0px;
+    color: black;
+    text-align: left;
+    font-size: 20px;
+    height:60px;
+}
+.useravatar .list-group-item p {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    width:165px;
+    display: inline-block;
+    
+}
+.useravatar .list-group-item span {
+    float: right;
+}
+.useravatar {
+    padding: 10px;
+    height:100%;
+    background-color: rgba(255, 255, 255, 0.04);
+    top:315px;
+    position:absolute;
+    width:100%;
+}
+.useravatar .list-group{
+    height:290px;
+    overflow-y:scroll;
+    
+}
+a {
+    text-decoration: none;
+}
+a:link, a:visited {
+    color: black;
+    text-decoration: none;
+}
+a:hover {
+    color: black;
+    text-decoration: none;
 }

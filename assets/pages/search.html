@@ -1,0 +1,183 @@
+<html>
+<style>
+    /* CSS used here will be applied after bootstrap.css */
+    
+    .ng-scope {
+        
+        
+    }
+    
+    .app-usagovsearch.result-container {
+        position: relative;
+        display: block;
+        width: 100%;
+    }
+    
+    .app-usagovsearch .result-area .list-unstyled a {
+        font-size: initial;
+        line-height: inherit;
+        margin-bottom: 0;
+        font-weight: normal;
+        text-decoration: underline;
+    }
+    
+    .app-usagovsearch .result-area p {
+        color: #333;
+    }
+    
+    .app-usagovsearch .result-area .thumbnail .caption {
+        padding: 10px 0 0 0;
+        margin: 0;
+    }
+    
+    .app-usagovsearch .result-area .thumbnail .caption p {
+        margin: 0;
+    }
+    
+    .app-usagovsearch .result-area .thumbnail .caption a {
+        text-decoration: none;
+        color: #333;
+        background: #f5f5f5;
+    }
+    
+    .app-usagovsearch .result-area .thumbnail .caption a:hover {
+        background: #e6e6e6;
+    }
+    
+    .app-usagovsearch .result-area cite {
+        display: block;
+        color: #093;
+    }
+    
+    .app-usagovsearch .result-area {
+        min-height: 600px;
+        padding: 0px 10px;
+    }
+    
+    .app-usagovsearch .results-window {
+        margin-bottom: 15px;
+    }
+    
+    .app-usagovsearch .total-results {
+        background-image: url('../Images/Search/bing.gif');
+        background-repeat: no-repeat;
+        background-position: right;
+        height: 25px;
+        padding: 5px 0;
+        border-bottom: 1px solid #ddd;
+        margin-bottom: 10px;
+    }
+    
+    .app-usagovsearch .total-results .label {
+        font-size: initial;
+        padding: 4px;
+    }
+    
+    .app-usagovsearch .siteUrl {
+        display: block;
+    }
+    
+    .app-usagovsearch .typeahead.dropdown-menu a {
+        color: #fff;
+    }
+    
+    .app-usagovsearch .tab-content {
+        padding: 10px 0;
+    }
+    
+    .app-usagovsearch .result-area .press cite {
+        display: inline-block;
+    }
+    
+    .app-usagovsearch .result-area .press p {
+        margin: 0;
+    }
+    
+    .app-usagovsearch .result-area .press li {
+        position: relative;
+        margin-bottom: 10px;
+        padding: 10px;
+        border-left: 30px solid #efefef;
+        background: #E8E8E8;
+    }
+    
+    .app-usagovsearch .result-area .press i {
+        position: absolute;
+        left: -23px;
+        top: 30px;
+    }
+    
+    .app-usagovsearch .result-area .press li.song {
+        border-color: rgba(255, 165, 0, 0.43);
+    }
+    
+    .app-usagovsearch .result-area .press li.comment {
+        border-color: rgba(0, 128, 118, 0.43);
+    }
+    
+    .app-usagovsearch .result-area .press li.lyrics {
+        border-color: rgba(128, 0, 0, 0.43);
+    }
+    
+    .app-usagovsearch .result-area .press li.user {
+        border-color: rgba(97, 98, 202, 0.43);
+    }
+    
+    .app-usagovsearch .result-area .press li.library {
+        border-color: rgba(20, 139, 249, 0.43);
+    }
+    .song {
+        border-color: rgba(255, 165, 0, 0.43);
+    }
+</style>
+
+
+<div class="app-usagovsearch result-container" style="height: 100%;background: #F1F1F1;width:100%;overflow-y:scroll;overflow-x: hidden;" ng-controller="Search">
+
+
+    <div class="tab-content">
+
+        <div class="tab-pane result-area active" id="profile">
+            <h1>Search results (found:10)</h1>
+            <ul class="list-unstyled press">
+                
+                <li class="{{x.type}}" ng-repeat="x in search">
+                    <i class="{{'fa ' + 'fa-' + x.fa + ' fa-lg'}}"></i>
+                    <a href="#/search">{{x.type}} : {{x.title}}</a>
+                    <p><cite class="publishedAgency">DATE</cite> - <span class="publishedDate">Published 12/9/2014</span></p>
+                    <p class="summary">Beginner archers have an opportunity to test their skills at The Snowflake Shoot</p>
+                </li>
+                
+                <!--
+                <li class="comment"><i class="fa fa-comment fa-lg"></i><a href="#/search">Comment: 'Excelente pieza!'</a>
+                    <p><cite class="publishedAgency">DATE</cite> - <span class="publishedDate">Published 12/9/2014</span></p>
+                    <p class="summary">Beginner archers have an opportunity totesttheir skills at The Snowflake Shoot</p>
+                </li>
+
+                <li class="lyrics"><i class="fa fa-file-text fa-lg"></i><a href="#/search">Lyrics: 'Rayando el <mark>sol</mark>'</a>
+                    <p><cite class="publishedAgency">DATE</cite> - <span class="publishedDate">Published 12/9/2014</span></p>
+                    <p class="summary">Beginner archers have an opportunity totesttheir skills at The Snowflake Shoot</p>
+                </li>
+
+                <li class="user"><i class="fa fa-user fa-lg"></i><a href="#/search">User: 'Santiago<mark>sol</mark>'</a>
+                    <p><cite class="publishedAgency">DATE</cite> - <span class="publishedDate">Published 12/9/2014</span></p>
+                    <p class="summary">Beginner archers have an opportunity totesttheir skills at The Snowflake Shoot</p>
+                </li>
+
+                <li class="library"><i class="fa fa-book fa-lg"></i><a href="#/search">Library: Santiago's</mark>'</a>
+                    <p><cite class="publishedAgency">DATE</cite> - <span class="publishedDate">Published 12/9/2014</span></p>
+                    <p class="summary">Beginner archers have an opportunity totesttheir skills at The Snowflake Shoot</p>
+                </li>
+                -->
+                
+            </ul>
+            <br>
+            <br>
+            <br>
+            <br>
+        </div>
+
+    </div>
+</div>
+
+</html>

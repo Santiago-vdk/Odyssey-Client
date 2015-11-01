@@ -1,0 +1,250 @@
+<html>
+
+
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+
+
+<style>
+    .ng-scope {}
+    
+    .widget-area.blank {
+        background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        -ms-box-shadow: none;
+        -o-box-shadow: none;
+        box-shadow: none;
+    }
+    
+    body .no-padding {
+        padding: 0;
+    }
+    
+    .widget-area {
+        background-color: #fff;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        -ms-border-radius: 4px;
+        -o-border-radius: 4px;
+        border-radius: 4px;
+        -webkit-box-shadow: 0 0 16px rgba(0, 0, 0, 0.05);
+        -moz-box-shadow: 0 0 16px rgba(0, 0, 0, 0.05);
+        -ms-box-shadow: 0 0 16px rgba(0, 0, 0, 0.05);
+        -o-box-shadow: 0 0 16px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 0 16px rgba(0, 0, 0, 0.05);
+        float: left;
+        margin-top: 30px;
+        padding: 25px 30px;
+        position: relative;
+        width: 100%;
+    }
+    
+    .status-upload {
+        background: none repeat scroll 0 0 #f5f5f5;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        -ms-border-radius: 4px;
+        -o-border-radius: 4px;
+        border-radius: 4px;
+        float: left;
+        width: 100%;
+    }
+    
+    .status-upload form {
+        float: left;
+        width: 100%;
+    }
+    
+    .status-upload form textarea {
+        background: none repeat scroll 0 0 #fff;
+        border: medium none;
+        -webkit-border-radius: 4px 4px 0 0;
+        -moz-border-radius: 4px 4px 0 0;
+        -ms-border-radius: 4px 4px 0 0;
+        -o-border-radius: 4px 4px 0 0;
+        border-radius: 4px 4px 0 0;
+        color: #777777;
+        float: left;
+        font-family: Lato;
+        font-size: 14px;
+        height: 142px;
+        letter-spacing: 0.3px;
+        padding: 20px;
+        width: 100%;
+        resize: vertical;
+        outline: none;
+        border: 1px solid #F2F2F2;
+    }
+    
+    .status-upload ul {
+        float: left;
+        list-style: none outside none;
+        margin: 0;
+        padding: 0 0 0 15px;
+        width: auto;
+    }
+    
+    .status-upload ul > li {
+        float: left;
+    }
+    
+    .status-upload ul > li > a {
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        -ms-border-radius: 4px;
+        -o-border-radius: 4px;
+        border-radius: 4px;
+        color: #777777;
+        float: left;
+        font-size: 14px;
+        height: 30px;
+        line-height: 30px;
+        margin: 10px 0 10px 10px;
+        text-align: center;
+        -webkit-transition: all 0.4s ease 0s;
+        -moz-transition: all 0.4s ease 0s;
+        -ms-transition: all 0.4s ease 0s;
+        -o-transition: all 0.4s ease 0s;
+        transition: all 0.4s ease 0s;
+        width: 30px;
+        cursor: pointer;
+    }
+    
+    .status-upload ul > li > a:hover {
+        background: none repeat scroll 0 0 #606060;
+        color: #fff;
+    }
+    
+    .status-upload form button {
+        border: medium none;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        -ms-border-radius: 4px;
+        -o-border-radius: 4px;
+        border-radius: 4px;
+        color: #fff;
+        float: right;
+        font-family: Lato;
+        font-size: 14px;
+        letter-spacing: 0.3px;
+        margin-right: 9px;
+        margin-top: 9px;
+        padding: 6px 15px;
+    }
+    
+    .dropdown > a > span.green:before {
+        border-left-color: #2dcb73;
+    }
+    
+    .status-upload form button > i {
+        margin-right: 7px;
+    }
+    
+    .information {
+        height: 200px;
+    }
+    
+    img {
+        width: 50px;
+        height: 50px;
+        max-width: 50px;
+        max-height: 50px;
+        -webkit-border-radius: 50%;
+        -moz-border-radius: 50%;
+        border-radius: 50%;
+        border: 3px solid rgba(0, 0, 0, 0.5);
+    }
+</style>
+
+
+
+
+<body>
+    <div class="wrapper" style="height:100%;width:100%;overflow-y:scroll;overflow-x:hidden;background: #F1F1F1;" ng-controller="SongCtrl">
+
+        <div class="information span2 well">
+            <div style="float:left;top:0">
+                <h2 style="margin:5;">{{songid}}</h2>
+                <br>
+                <h3 style="margin:5;"> <small>Uploaded By: {{userid}}</small></h3>
+                <h4 style="margin:5;text-align:center;">  <p><i class="fa fa-heart fa-2x text-danger"></i></p></h4>
+
+         
+
+                <h4 style="margin:5;">  <p><a class="btn btn-danger" href="#"><i class="fa fa-play"></i> Stream</a></p></h4>
+
+            </div>
+            <div style="float:right">
+                <h2 style="margin:5;"> <small>Artist: {{song.artist}}</small></h2>
+                <h2 style="margin:5;"><small>Album: {{song.album}}</small></h2>
+                <h2 style="margin:5;"><small>Year: {{song.year}}</small></h2>
+                <a class="btn btn-success" href="{{'#/library/' + userid + '/1'}}"><i class="fa fa-pencil"></i> EDIT</a>
+                 <a class="btn btn-info" href="" ng-click="showLyrics(userid,songid)" ng-controller="LyricsCtrl"><i class="fa fa-book"></i> Lyrics</a>
+               
+                <a class="btn btn-default" href="{{'#/profile/' + userid}}"><i class="fa fa-user"></i> User</a>
+            </div>
+        </div>
+
+        <div class="comments" style="background:#ECECEC;padding: 5px;">
+
+            <div class="row">
+                <div class="col-md-8" style="width:100%;">
+                    <div class="page-header">
+                        <h1><small class="pull-right">{{song.commentcount}} comments</small> Comments </h1>
+                    </div>
+                    <div class="comments-list">
+
+                        <div class="media" ng-repeat="x in song.comments">
+                            <!-- <p class="pull-right"><small>{{x.date}}</small></p>  -->
+                            <p class="pull-right"><small>5 days ago</small></p>
+                            <a class="media-left" href="#">
+                                <img ng-src="{{ 'http://api.adorable.io/avatars/285/' + x.user }}">
+                            </a>
+                            <div class="media-body">
+                                <h4 class="media-heading user_name">{{x.user}}</h4> {{x.value}}
+                                <p><small><a href="">Like</a> - <a href="">Share</a></small></p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comment Section -->
+        <div class="row" style="background:#ECECEC;padding: 5px;">
+
+            <div class="col-md-6" style="width:100%;">
+                <div class="widget-area no-padding blank">
+                    <div class="status-upload">
+                        <form>
+                            <textarea placeholder="What are you doing right now?"></textarea>
+                            <ul>
+                                <li><a title="" data-toggle="tooltip" data-placement="bottom" data-original-title="Audio"><i class="fa fa-music"></i></a></li>
+                                <li><a title="" data-toggle="tooltip" data-placement="bottom" data-original-title="Video"><i class="fa fa-video-camera"></i></a></li>
+                                <li><a title="" data-toggle="tooltip" data-placement="bottom" data-original-title="Sound Record"><i class="fa fa-microphone"></i></a></li>
+                                <li><a title="" data-toggle="tooltip" data-placement="bottom" data-original-title="Picture"><i class="fa fa-picture-o"></i></a></li>
+                            </ul>
+                            <button type="submit" class="btn btn-success green"><i class="fa fa-share"></i> Share</button>
+                        </form>
+                    </div>
+                    <!-- Status Upload  -->
+                </div>
+                <!-- Widget Area -->
+            </div>
+
+        </div>
+
+        <br>
+        <br>
+        <br>
+        <br>
+    </div>
+
+</body>
+
+
+
+</html>
