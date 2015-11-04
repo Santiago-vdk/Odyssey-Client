@@ -1,10 +1,8 @@
 <html>
-
-
-<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
-
+<!--     <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="assets/js/bootstrap.min.js"></script>
+<link href="assets/css/bootstrap.min.css" rel="stylesheet"> -->
+<link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
 
 <style>
     .ng-scope {}
@@ -169,11 +167,15 @@
                 <h2 style="margin:5;">{{songid}}</h2>
                 <br>
                 <h3 style="margin:5;"> <small>Uploaded By: {{userid}}</small></h3>
-                <h4 style="margin:5;text-align:center;">  <p><i class="fa fa-heart fa-2x text-danger"></i></p></h4>
+               
+                <div class="btn-group" role="group" >
+                    <button type="button" class="btn btn-danger"><i class="fa fa-thumbs-down fa-2x" style="color:black"></i></button>
+                    <button type="button" class="btn btn-primary" ><i class="fa fa-thumbs-up fa-2x" style="color:black"></i></button>
+                    
+                </div>
 
-         
 
-                <h4 style="margin:5;">  <p><a class="btn btn-danger" href="#"><i class="fa fa-play"></i> Stream</a></p></h4>
+                <h4 style="margin:5;">  <p><a class="btn btn-warning" href="#"><i class="fa fa-play"></i> Stream</a></p></h4>
 
             </div>
             <div style="float:right">
@@ -181,12 +183,10 @@
                 <h2 style="margin:5;"><small>Album: {{song.album}}</small></h2>
                 <h2 style="margin:5;"><small>Year: {{song.year}}</small></h2>
                 <a class="btn btn-success" href="{{'#/library/' + userid + '/1'}}"><i class="fa fa-pencil"></i> EDIT</a>
-                 <a class="btn btn-info" href="" ng-click="showLyrics(userid,songid)" ng-controller="LyricsCtrl"><i class="fa fa-book"></i> Lyrics</a>
-               
+                <a class="btn btn-info" href="" ng-click="showLyrics(userid,songid)" ng-controller="LyricsCtrl"><i class="fa fa-book"></i> Lyrics</a>
                 <a class="btn btn-default" href="{{'#/profile/' + userid}}"><i class="fa fa-user"></i> User</a>
             </div>
         </div>
-
         <div class="comments" style="background:#ECECEC;padding: 5px;">
 
             <div class="row">
@@ -200,7 +200,7 @@
                             <!-- <p class="pull-right"><small>{{x.date}}</small></p>  -->
                             <p class="pull-right"><small>5 days ago</small></p>
                             <a class="media-left" href="#">
-                                <img ng-src="{{ 'http://api.adorable.io/avatars/285/' + x.user }}">
+                                <a href=""></a> <img ng-src="{{ 'http://api.adorable.io/avatars/285/' + x.user }}">
                             </a>
                             <div class="media-body">
                                 <h4 class="media-heading user_name">{{x.user}}</h4> {{x.value}}

@@ -36,7 +36,6 @@ $(function () {
                         "parent": $.trim(p.text()),
                         "grandparent": $.trim(gp.text()),
                         "id": n.attr ? n.attr("id").replace("node-", "") : 1,
-
                     };
                 }
             }
@@ -45,9 +44,7 @@ $(function () {
 });
 
 $(document).ready(function () {
-
     $('#jstree').on("changed.jstree", function (e, data) {
-        console.log(data.selected);
         if (data.selected == "root") {
             localStorage["viewinglibrary"] = data.selected; //Aqui identificador de la biblioteca, el due;o siempre es el username
             window.location.href = "#/library/" + localStorage.username + "/" + String(data.selected);
@@ -64,14 +61,4 @@ $(document).ready(function () {
         var data = node.data("jstree");
         console.log("Doble click " + data);
     });
-
 });
-
-
-
-function addSong(song) {
-
-
-
-
-}

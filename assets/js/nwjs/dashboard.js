@@ -1,191 +1,206 @@
-try {
-    //get node webkit GUI
-    var gui = require('nw.gui');
-    var mm = require('musicmetadata');
-    var fs = require('fs');
-    var request = require('request')
-        // get the window object
-    var win = gui.Window.get();
+ $(document).ready(function () {
+     $('.fixed-div').click(function (event) { // where href are blank
+         event.preventDefault();
+     });
+ });
 
-    win.on('loaded', function () {
-        // the native onload event has just occurred
-        var document = win.window.document;
-        var dropTarget = document.querySelector("#drop-zone");
+ try {
+     //get node webkit GUI
+     var gui = require('nw.gui');
+     var mm = require('musicmetadata');
+     var fs = require('fs');
+     var request = require('request')
+         // get the window object
+     var win = gui.Window.get();
 
-        //DRAG & DROP CANCIONES
-        require("drag-and-drop-files")(dropTarget, function (files) {
-            console.log("Got some files:", files)
-            try {
-                handleTracks(files);
-            } catch (err) {
-                console.log("Hubo un error: " + err);
-            }
-        })
-    });
-    win.setMinimumSize(720, 405);
-    win.setMaximumSize(3000, 1688);
-    win.width = 1280;
-    win.height = 720;
-    win.setPosition("center");
-    //win.Maximize();
+     win.on('loaded', function () {
+         // the native onload event has just occurred
+         var document = win.window.document;
+         var dropTarget = document.querySelector("#drop-zone");
 
-    var menubar = new gui.Menu({
-        type: 'menubar'
-    });
-    var file = new gui.Menu();
-    var subMenu = new gui.Menu();
-    file.append(new gui.MenuItem({
-        label: 'Action 1',
-        click: function () {
-            alert('Action 1 Clicked');
-        }
-    }));
-    file.append(new gui.MenuItem({
-        label: 'Action 2',
-        click: function () {
-            alert('Action 2 Clicked');
-        }
-    }));
-    subMenu.append(new gui.MenuItem({
-        label: 'SubMenu Action 1',
-        click: function () {
-            alert('SubMenu Action 1 Clicked');
-        }
-    }));
-    subMenu.append(new gui.MenuItem({
-        label: 'SubMenu Action 2',
-        click: function () {
-            alert('SubMenu Action 2 Clicked');
-        }
-    }));
-    menubar.append(new gui.MenuItem({
-        label: 'File',
-        submenu: file
-    }));
-    file.append(new gui.MenuItem({
-        label: 'Sub Action Menu',
-        submenu: subMenu
-    }));
-    win.menu = menubar;
+         //DRAG & DROP CANCIONES
+         require("drag-and-drop-files")(dropTarget, function (files) {
+             console.log("Got some files:", files)
+             try {
+                 handleTracks(files);
+             } catch (err) {
+                 console.log("Hubo un error: " + err);
+             }
+         })
+     });
 
-} catch (err) {
-    console.log("Probably not running on NWJS, NP m8.");
-    console.log("No Require() will work in this mode.");
-}
+     win.on('close', function () {
+         $.getScript("assets/js/authentication/auth.js", function () {
+             logout(this);
+             this.close(true);
+         });
 
-function Song(title, artist, album, year,genre,lyrics, path, mp3) {
-    this.title = title;
-    this.artist = artist;
-    this.album = album;
-    this.year = year;
-    this.genre = genre;
-    this.lyrics = lyrics;
-    this.path = path;
-    this.mp3 = mp3;
-}
+         
+     });
 
-function handleTracks(trackArray) {
-    var subarray = [];
-    //trackArray tiene un arreglo con todas las canciones
-    for (var i = 0; i < trackArray.length; i++) {
-        var path = trackArray[i].path;
-        go(path, i, trackArray, subarray);
+     win.setMinimumSize(720, 405);
+     win.setMaximumSize(3000, 1688);
+     win.width = 1280;
+     win.height = 720;
+     win.setPosition("center");
+     //win.Maximize();
 
-    }(i) //Linea magica
-}
+     var menubar = new gui.Menu({
+         type: 'menubar'
+     });
+     var file = new gui.Menu();
+     var subMenu = new gui.Menu();
+     file.append(new gui.MenuItem({
+         label: 'Action 1',
+         click: function () {
+             alert('Action 1 Clicked');
+         }
+     }));
+     file.append(new gui.MenuItem({
+         label: 'Action 2',
+         click: function () {
+             alert('Action 2 Clicked');
+         }
+     }));
+     subMenu.append(new gui.MenuItem({
+         label: 'SubMenu Action 1',
+         click: function () {
+             alert('SubMenu Action 1 Clicked');
+         }
+     }));
+     subMenu.append(new gui.MenuItem({
+         label: 'SubMenu Action 2',
+         click: function () {
+             alert('SubMenu Action 2 Clicked');
+         }
+     }));
+     menubar.append(new gui.MenuItem({
+         label: 'File',
+         submenu: file
+     }));
+     file.append(new gui.MenuItem({
+         label: 'Sub Action Menu',
+         submenu: subMenu
+     }));
+     win.menu = menubar;
+ } catch (err) {
+     console.log("Probably not running on NWJS, NP m8.");
+     console.log("No Require() will work in this mode.");
+ }
 
-function go(path, i, trackArray, subarray) {
+ function Song(title, artist, album, year, genre, lyrics, path, mp3) {
+     this.title = title;
+     this.artist = artist;
+     this.album = album;
+     this.year = year;
+     this.genre = genre;
+     this.lyrics = lyrics;
+     this.path = path;
+     this.mp3 = mp3;
+ }
 
+ function handleTracks(trackArray) {
+     var subarray = [];
+     //trackArray tiene un arreglo con todas las canciones
+     for (var i = 0; i < trackArray.length; i++) {
+         var path = trackArray[i].path;
+         go(path, i, trackArray, subarray);
 
-    var parser = mm(fs.createReadStream(trackArray[i].path), function (err, metadata) {
-        /*console.log(metadata);
-        console.log(metadata.title);
-        console.log(metadata.artist[0]);
-        console.log(metadata.album);
-        console.log(metadata.year);*/
-        console.log(metadata);
-        var isMP3 = true;
-        console.log(metadata.artist[0]);
-        if(metadata.artist[0] === undefined){
-            isMP3 = false;
-        }
+     }(i) //Linea magica
+ }
 
-        var songObject = new Song(metadata.title, metadata.artist[0], metadata.album, metadata.year,metadata.genre[0],"La la lo", path, isMP3);
-        subarray.push(songObject);
-        log(subarray);
-    });
-
-}
+ function go(path, i, trackArray, subarray) {
 
 
-// post_song(base64_encode(trackArray[i].path));
+     var parser = mm(fs.createReadStream(trackArray[i].path), function (err, metadata) {
+         /*console.log(metadata);
+         console.log(metadata.title);
+         console.log(metadata.artist[0]);
+         console.log(metadata.album);
+         console.log(metadata.year);*/
+         console.log(metadata);
+         var isMP3 = true;
+         console.log(metadata.artist[0]);
+         if (metadata.artist[0] === undefined) {
+             isMP3 = false;
+         }
+
+         var songObject = new Song(metadata.title, metadata.artist[0], metadata.album, metadata.year, metadata.genre[0], "La la lo", path, isMP3);
+         subarray.push(songObject);
+         log(subarray);
+     });
+
+ }
 
 
-
-function log(data) {
-    localStorage["data"] = JSON.stringify(data);
-    window.location.href = "#/dragged_songs";
-}
-
-function base64_encode(file) {
-    // read binary data
-    var binary_blob = fs.readFileSync(file);
-    // convert binary data to base64 encoded string
-    return new Buffer(binary_blob).toString('base64');
-}
-
-function post_song(data) {
-
-    request({
-        method: 'POST',
-        url: 'http://192.168.1.135:9080/OdysseyCloud/api/v1/users/1/libraries/1/songs',
-        headers: {
-            'content-type': 'application/json'
-        },
-        body: JSON.stringify({
-            name: "Prueba",
-            blob: data
-        })
-    }, callback);
-}
-
-function callback(error, response, body) {
-    if (!error && response.statusCode == 200) {
-        var info = JSON.parse(body);
-        //console.log(info);
-    }
-
-}
+ // post_song(base64_encode(trackArray[i].path));
 
 
 
-/*
+ function log(data) {
+     localStorage["data"] = JSON.stringify(data);
+     window.location.href = "#/dragged_songs";
+ }
 
-    
-    
-    
-              // create a new parser from a node ReadStream 
-                   
+ function base64_encode(file) {
+     // read binary data
+     var binary_blob = fs.readFileSync(file);
+     // convert binary data to base64 encoded string
+     return new Buffer(binary_blob).toString('base64');
+ }
 
-                    var content;
+ function post_song(data) {
 
-                    fs.readFile(files[i].path, 'ascii', 'rb', function (err, data) {
-                        if (err) throw err;
+     request({
+         method: 'POST',
+         url: 'http://192.168.1.135:9080/OdysseyCloud/api/v1/users/1/libraries/1/songs',
+         headers: {
+             'content-type': 'application/json'
+         },
+         body: JSON.stringify({
+             name: "Prueba",
+             blob: data
+         })
+     }, callback);
+ }
 
-                        console.log(data);
+ function callback(error, response, body) {
+     if (!error && response.statusCode == 200) {
+         var info = JSON.parse(body);
+         //console.log(info);
+     }
 
-                        
+ }
 
 
 
-                    });
+ /*
+
+     
+     
+     
+               // create a new parser from a node ReadStream 
+                    
+
+                     var content;
+
+                     fs.readFile(files[i].path, 'ascii', 'rb', function (err, data) {
+                         if (err) throw err;
+
+                         console.log(data);
+
+                         
 
 
 
-                    //Insertar cancion en SQLite
-                    //insertSong(files[i]);
+                     });
 
-                    //Agregar cancion al arbol
-                    //addSong(files[i]);
 
-*/
+
+                     //Insertar cancion en SQLite
+                     //insertSong(files[i]);
+
+                     //Agregar cancion al arbol
+                     //addSong(files[i]);
+
+ */
