@@ -7,14 +7,16 @@ Primary style
 html,
 body {
    // background: #efefef;
-   background: -webkit-linear-gradient(90deg, #304352 10%, #d7d2cc 90%); /* Chrome 10+, Saf5.1+ */
+   //background: -webkit-linear-gradient(90deg, #304352 10%, #d7d2cc 90%); /* Chrome 10+, Saf5.1+ */
+background: -webkit-linear-gradient(90deg, #FF4E50 10%, #F9D423 90%); /* Chrome 10+, Saf5.1+ */
     padding-left: 10px;
     font-family: 'Varela Round';
     height: 100%;
     overflow: hidden;
 }
 a {
-    color: #aaaaaa;
+    //color: #aaaaaa;
+    color: black;
     transition: all ease-in-out 200ms;
 }
 a:hover {
@@ -25,7 +27,8 @@ a:hover {
 /*=== 3. Text Outside the Box ===*/
 
 .etc-login-form {
-    color: #919191;
+   // color: #919191;
+    color: black;
     padding: 10px 20px;
 }
 .etc-login-form p {
@@ -53,12 +56,14 @@ a:hover {
     height: auto;
 }
 .login-form-1 .form-control::-webkit-input-placeholder {
-    color: #999999;
+    //color: #999999;
+    color: black;
 }
 .login-form-1 .form-control:-moz-placeholder,
 .login-form-1 .form-control::-moz-placeholder,
 .login-form-1 .form-control:-ms-input-placeholder {
-    color: #999999;
+    //color: #999999;
+    color: black;
 }
 .login-form-1 .form-group {
     margin-bottom: 0;
@@ -71,7 +76,8 @@ a:hover {
 }
 .login-group {
     background: #ffffff;
-    color: #999999;
+    color: black;
+    // color: #999999;
     border-radius: 8px;
     padding: 10px 20px;
 }

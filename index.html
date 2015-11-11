@@ -1,38 +1,56 @@
 <!DOCTYPE html>
 <html>
-
-
 <!-- All the files that are required -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 <link href='http://fonts.googleapis.com/css?family=Varela+Round' rel='stylesheet' type='text/css'>
 
-
 <!--<script src="./assets/js/jquery.validate.min.js"></script> -->
-
 <script src="./assets/js/jquery-2.1.4.js"></script>
 <!--<script src="./assets/js/style.js"></script>-->
-
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-
 <link href="assets/css/style.css" rel="stylesheet">
+<script src="assets/js/sweetalert.min.js"></script>
+<script src="assets/js/sql.js"></script>
+<script src="assets/js/storage.js"></script>
+<link href="assets/css/sweetalert.css" rel="stylesheet">
 
 <script>
     $.getScript("./assets/js/style.js");
 </script>
-
-
 
 <script>
     var gui = require('nw.gui');
     var win = gui.Window.get();
 
     win.width = 370;
-    win.height = 550;
-    win.setMinimumSize(370, 550);
-    win.setMaximumSize(370, 550);
+    win.height = 700;
+    win.setMinimumSize(370, 700);
+    win.setMaximumSize(370, 700);
 
     //win.setResizable(false);
     win.setPosition("center");
+
+    win.on('loaded', function() {
+        $.ajax({
+            url: "\config.json",
+            success: function(data) {
+                var obj = JSON.parse(data);
+                localStorage.clear();
+                localStorage["server"] = obj.server;
+            }
+        });
+    });
+
+    win.on('close', function() {
+        this.hide();
+
+        // If the new window is still open then close it.
+        if (win != null)
+            win.close(true);
+
+        // After closing the new window, close the main window.
+        this.close(true);
+    });
 </script>
 
 <script>
@@ -41,7 +59,7 @@
         return false;
     }
 </script>
-    
+
 <script src="assets/js/authentication/bCrypt.js"></script>
 <script src="assets/js/authentication/auth.js"></script>
 
@@ -59,7 +77,7 @@
         <div class="logo">login</div>
         <!-- Main Form -->
         <div class="login-form-1">
-            <form id="login-form" class="text-left" action="javascript:login()">
+            <form id="login-form" class="text-left" action="javascript:login();">
                 <div class="login-form-main-message"></div>
                 <div class="main-login-form">
                     <div class="login-group">
@@ -71,6 +89,22 @@
                             <label for="lg_password" class="sr-only">Password</label>
                             <input type="password" class="form-control" id="lg_password" name="lg_password" placeholder="password">
                         </div>
+                        
+                        <div class="form-group">
+                            <label for="lg_username" class="sr-only">Database name</label>
+                            <input type="text" class="form-control" id="db_name" placeholder="db_name">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="lg_username" class="sr-only">Database user</label>
+                            <input type="text" class="form-control" id="db_user" placeholder="db_user">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="lg_username" class="sr-only">Database password</label>
+                            <input type="text" class="form-control" id="db_password" placeholder="db_password">
+                        </div>
+                        
                     </div>
                     <button type="submit" class="login-button"><i class="fa fa-chevron-right"></i></button>
                 </div>

@@ -6,9 +6,6 @@
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
 -->
 
-
-
-
 <style>
     .ng-scope {
        /*height: 100%;*/
@@ -206,7 +203,9 @@
             </div>
             <div style="float:right">
                 <p style="text-align: right;"><span><a href="{{'#/profile/'+userid}}"><img alt="" ng-src="{{ 'http://api.adorable.io/avatars/285/' + userid}}"></a></span></p>
-                <h4 style="margin:5;text-align: right;">  <p><a class="btn btn-success" href="#"><i class="fa fa-user-plus"></i> Add friend</a></p></h4>
+                
+                <h4 style="margin:5;text-align: right;">  <p><a class="btn btn-success" href="" ng-click="addFriend(userid)"><i class="fa fa-user-plus"></i> Add friend</a></p></h4>
+                
                 <h4 style="margin:5;text-align: rigth;">  <p><a class="btn btn-danger" href="#"><i class="fa fa-user-times"></i> Remove friend</a></p></h4>
             </div>
         </div>

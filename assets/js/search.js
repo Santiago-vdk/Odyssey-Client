@@ -29,5 +29,16 @@ $(document).ready(function () {
         }
 
     });
+    
+    
+    
+      $('a[href="#loading"]').on('click', function (event) {
+          console.log("clicked");
+        event.preventDefault();
+        $('#loading').addClass('open');
+      //  $('#loading > form > input[type="search"]').focus();
+    });
+
+ 
 
 });

@@ -30,12 +30,20 @@
      });
 
      win.on('close', function () {
+         
          $.getScript("assets/js/authentication/auth.js", function () {
              logout(this);
+             this.hide();
+
+             // If the new window is still open then close it.
+             if (win != null)
+                 win.close(true);
+
+             // After closing the new window, close the main window.
              this.close(true);
          });
 
-         
+
      });
 
      win.setMinimumSize(720, 405);
@@ -88,7 +96,7 @@
      console.log("No Require() will work in this mode.");
  }
 
- function Song(title, artist, album, year, genre, lyrics, path, mp3) {
+ function Song(title, artist, album, year, genre, lyrics, path, library) {
      this.title = title;
      this.artist = artist;
      this.album = album;
@@ -96,8 +104,10 @@
      this.genre = genre;
      this.lyrics = lyrics;
      this.path = path;
-     this.mp3 = mp3;
+     //this.mp3 = mp3;
+    this.lib = library;
  }
+
 
  function handleTracks(trackArray) {
      var subarray = [];
@@ -118,23 +128,21 @@
          console.log(metadata.artist[0]);
          console.log(metadata.album);
          console.log(metadata.year);*/
-         console.log(metadata);
-         var isMP3 = true;
-         console.log(metadata.artist[0]);
+         
+        /* var isMP3 = true;
+   
          if (metadata.artist[0] === undefined) {
              isMP3 = false;
-         }
+         }*/
 
-         var songObject = new Song(metadata.title, metadata.artist[0], metadata.album, metadata.year, metadata.genre[0], "La la lo", path, isMP3);
+         var songObject = new Song(metadata.title, metadata.artist[0], metadata.album, metadata.year, metadata.genre[0], "", path, "1");
          subarray.push(songObject);
          log(subarray);
      });
-
  }
 
 
  // post_song(base64_encode(trackArray[i].path));
-
 
 
  function log(data) {
@@ -153,7 +161,7 @@
 
      request({
          method: 'POST',
-         url: 'http://192.168.1.135:9080/OdysseyCloud/api/v1/users/1/libraries/1/songs',
+         url: localStorage.server + 'api/v1/users/1/libraries/1/songs',
          headers: {
              'content-type': 'application/json'
          },
@@ -204,3 +212,5 @@
                      //addSong(files[i]);
 
  */
+
+

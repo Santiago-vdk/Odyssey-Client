@@ -37,27 +37,56 @@
 <script src="assets/js/dashboardEffects.js"></script>
 <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
 <script src="assets/js/bootbox.min.js"></script>
-    
+
 <script src="assets/js/authentication/bCrypt.js"></script>
 <script src="assets/js/authentication/auth.js"></script>
 
 <!-- AngularJS -->
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
 <script src="https://code.angularjs.org/1.4.7/angular-route.min.js"></script>
+<script src="assets/js/ui-bootstrap-tpls-0.14.3.min.js"></script>
 <script src="assets/js/user/hello.js"></script>
     
+<script src="assets/js/sql.js"></script>
 
+    <script>
+         $(document).ready(function () {
+
+             if(localStorage.firstLocalSync === 'false'){
+                 angular.element(document.getElementById('loading')).scope().startLocalSync();
+                 $('#loading').addClass('open');
+                 localStorage["firstLocalSync"] = true;
+               
+             }
+         });
+    
+    </script>
 
 <head>
 </head>
 
 <body>
+
+
     <div id="search">
         <button type="button" class="close">X</button>
         <form>
             <input id="omni-text" autocomplete="off" type="search" value="" placeholder="Need something? Ask Omni :)" </i>
             <button id="omni-search" type="submit" class="btn btn-primary">Search</button>
+
         </form>
+    </div>
+
+    <div id="loading" ng-controller="myController">
+        <h1 style="color:white;">Loading Cloud library...</h1>
+        <div class="text-center center">
+            <div class="progress center-block" style="width:800px;height:30px;">
+                <!-- set to certain width -->
+                <div class="progress-bar progress-bar-striped active" role="progressbar" id="loadingBar" style="width: 0%;">
+                    <span id="counter">0/3</span>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="wrapper" ng-controller="Me">
@@ -70,21 +99,20 @@
                     <div class="navbar-header" style="overflow:hidden;">
 
                         <a class="navbar-brand" href="{{'#/profile/' + currentUser() }}" style="background:#f8f8f8;">Hi, {{currentUser()}}</a>
-                      
+
                     </div>
 
-                    
+
 
                     <!-- Collect the nav links, forms, and other content for toggling  <a class="navbar-brand"  style="background:#f8f8f8;">Hi, {{me.id}} </a>-->
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav navbar-right">
                             <li><a href="#search">Search</a></li>
                         </ul>
-                         <ul class="nav navbar-nav navbar-center" ng-controller="CurrentlyPlayingCtrl">
+                        <ul class="nav navbar-nav navbar-center" ng-controller="CurrentlyPlayingCtrl">
                             <li><a>Currently playing: {{song}}...</a></li>
-                             
                         </ul>
-                     
+
                     </div>
                 </div>
             </nav>
@@ -118,7 +146,7 @@
             </div>
             <div class="version">
 
-                
+
 
                 <div class="row">
                     <div class="col-sm-3 col-md-3" style="width:100%;padding-left:20px;padding-right:20px;top:10px;">
@@ -130,10 +158,10 @@
                             </span>Content</a>
                         </h4>
                                 </div>
-                                <div id="collapseOne" class="panel-collapse collapse in">
+                                <div id="collapseOne" class="panel-collapse collapse in" ng-controller="UserMenuCtrl2">
                                     <div class="panel-body">
                                         <table class="table">
-                                          
+
                                             <tr>
                                                 <td>
                                                     <span class="glyphicon glyphicon-flash text-success"></span><a href="#/news">News</a>
@@ -141,7 +169,8 @@
                                             </tr>
                                             <tr>
                                                 <td>
-                                                    <span class="glyphicon glyphicon-cloud-upload text-info"></span><a href="">Sync. library</a>
+                                                 <span class="glyphicon glyphicon-cloud text-muted"></span><a href="" ng-click="cloudSync()">
+                                            Cloud Sync</a>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -163,41 +192,39 @@
 
 
 
-
-
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <h4 class="panel-title">
-                            <a class="fixed-div" data-toggle="collapse" data-parent="#accordion" href="#collapseThree"><span class="glyphicon glyphicon-user">
+                            <a class="fixed-div" data-toggle="collapse"  data-parent="#accordion" href="#collapseThree"><span class="glyphicon glyphicon-user">
                             </span>Account</a>
                         </h4>
                                 </div>
-                                <div id="collapseThree" class="panel-collapse collapse" ng-controller="UserMenuCtrl">
+                                <div id="collapseThree" class="panel-collapse collapse"  ng-controller="UserMenuCtrl">
                                     <div class="panel-body">
                                         <table class="table">
-                                             <tr>
+                                            <tr>
                                                 <td>
                                                     <a href="" ng-click="">Local database</a>
                                                 </td>
                                             </tr>
-                                            
+
                                             <tr>
                                                 <td>
                                                     <a href="" ng-click="changePassword()">Change Password</a>
                                                 </td>
                                             </tr>
-                                           
+
                                             <tr>
                                                 <td>
                                                     <a href="" ng-click="logoutAccount()">Logout</a>
                                                 </td>
                                             </tr>
-                                              <tr>
+                                            <tr>
                                                 <td>
                                                     <a href="">Rate us!</a>
                                                     <span class="badge"><3</span>
                                                 </td>
-                                                  
+
                                             </tr>
                                             <tr>
                                                 <td>
@@ -219,11 +246,6 @@
                     </div>
                 </div>
 
-
-
-
-
-
                 <div class="useravatar">
                     <h3 style="text-align:left;margin-top:0;margin-bottom:0;">Friends</h3>
                     <!-- ng-src="{{ 'http://api.adorable.io/avatars/285/' + x.user }}" -->
@@ -235,25 +257,19 @@
 
                 </div>
 
-
-
                 <!--<button type="button" class="btn btn-success"><a id="publish-btn" style="color:black">Publish this shit m8!</a></button> -->
             </div>
             <div class="frame" ng-view>
 
-
-
-
                 <!--    <div class="main-social" ></div> -->
-
-
-
 
             </div>
         </div>
+
         <div class="player">
 
-            <audio id="music-player" src="http://192.168.1.135:9080/OdysseyCloud/api/v1/users/1/libraries/1/songs/stream" data="Dig up her bones - Misfits" type="audio/mpeg" preload="auto"></audio><!-- src="http://192.168.1.135:9080/OdysseyCloud/api/v1/users/1/libraries/1/songs/stream"-->
+            <audio id="music-player" src="" data="Dig up her bones - Misfits" type="audio/mpeg" preload="auto"></audio>
+            <!-- src="http://192.168.1.135:9080/OdysseyCloud/api/v1/users/1/libraries/1/songs/stream"-->
         </div>
     </div>
 </body>

@@ -1,5 +1,8 @@
 var app = angular.module('odyssey', ['ngRoute']);
 
+app.config(['$compileProvider', function ($compileProvider) {
+    $compileProvider.debugInfoEnabled(false);
+}]);
 
 app.controller('Me', function ($scope, $http) {
     $scope.clickEvent = function (obj) {
@@ -9,15 +12,15 @@ app.controller('Me', function ($scope, $http) {
 
     $scope.currentUser = function () {
         return localStorage.username;
-         
+
     };
-    
+
     var dataJSON = {
         token: localStorage.token
     }
 
     $http({
-        url: 'http://192.168.1.135:9080/OdysseyCloud/api/v1/users/me',
+        url: localStorage.server + 'api/v1/users/me',
         method: 'POST',
         data: JSON.stringify(dataJSON),
         dataType: "json",
@@ -28,6 +31,7 @@ app.controller('Me', function ($scope, $http) {
         console.log("Success");
         $scope.me = data;
     });
+
 
     /*
     $http.get('http://192.168.1.135:9080/OdysseyCloud/api/v1/users/me').
@@ -69,7 +73,7 @@ app.controller('RandomMessage', function ($scope, $http) {
 
 app.controller('Recomendations', function ($scope, $http) {
     $http({
-        url: 'http://192.168.1.135:9080/OdysseyCloud/api/v1/tools/recomendations',
+        url: localStorage.server + 'api/v1/tools/recomendations',
         method: 'POST',
         data: localStorage.query,
         dataType: "json",
@@ -85,7 +89,7 @@ app.controller('Recomendations', function ($scope, $http) {
 
 app.controller('Search', function ($scope, $http) {
     $http({
-        url: 'http://192.168.1.135:9080/OdysseyCloud/api/v1/tools/search',
+        url: localStorage.server + 'api/v1/tools/search',
         method: 'POST',
         data: localStorage.query,
         dataType: "json",
@@ -98,7 +102,6 @@ app.controller('Search', function ($scope, $http) {
         $scope.search = data;
     });
 });
-
 
 app.config(function ($routeProvider) {
     $routeProvider
@@ -123,17 +126,37 @@ app.config(function ($routeProvider) {
         .when('/news', {
             templateUrl: './assets/pages/news.html'
         })
+        .when('/editor', {
+            templateUrl: './assets/pages/library_editor.html'
+        })
         .otherwise({
             redirectTo: '/news'
         })
 });
 
+app.controller('EditorCtrl', function ($scope) {
+    var data = {
+        "title": "test",
+        "artist": "mna",
+        "album": "rayand",
+        "year": "2015",
+        "genre": "rock",
+        "lyrics": "la la la",
+        "path": "casita",
+        "lib": "1",
+    }
+
+    var arr = [];
+    arr.push(data);
+
+    $scope.library = arr;
+});
 
 
 app.controller('ProfileCtrl', function ($routeParams, $http, $scope) {
     $scope.userid = $routeParams.userid;
 
-    $http.get('http://192.168.1.135:9080/OdysseyCloud/api/v1/users/' + $scope.userid).
+    $http.get(localStorage.server + 'api/v1/users/' + $scope.userid).
     success(function (data) {
         $scope.user = data;
     });
@@ -149,6 +172,30 @@ app.controller('LibraryCtrl', function ($routeParams, $http, $scope) {
         } else {
             return false;
         }
+    };
+
+    $scope.addFriend = function (lib_user) {
+        //lib_user, due;o de la biblioteca que estoy viendo
+        
+        var dataJSON = {
+            "username":localStorage.username,
+            "token":localStorage.token,
+            "friend":lib_user
+        }
+        
+        $http({
+            url: localStorage.server + 'api/v1/users/' + localStorage.username + '/?type=friend',
+            method: 'PUT',
+            data: JSON.stringify(dataJSON),
+            dataType: "json",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).success(function (data) {
+            console.log("New Friend Added!");
+          
+        });
+
     };
 
     $scope.changeVersion = function () {
@@ -186,7 +233,7 @@ app.controller('LibraryCtrl', function ($routeParams, $http, $scope) {
 
     }
 
-    $http.get('http://192.168.1.135:9080/OdysseyCloud/api/v1/users/' + $scope.userid + '/libraries/' + $scope.libraryid + '?type=lib').
+    $http.get(localStorage.server + 'api/v1/users/' + $scope.userid + '/libraries/' + $scope.libraryid + '?type=lib').
     success(function (data) {
         $scope.library = data;
     });
@@ -198,7 +245,7 @@ app.controller('SongCtrl', function ($routeParams, $http, $scope) {
     $scope.libraryid = $routeParams.libraryid;
     $scope.songid = $routeParams.songid;
 
-    $http.get('http://192.168.1.135:9080/OdysseyCloud/api/v1/users/' + $scope.userid + '/libraries/1/songs/' + $scope.songid).
+    $http.get(localStorage.server + 'api/v1/users/' + $scope.userid + '/libraries/1/songs/' + $scope.songid).
     success(function (data) {
         $scope.song = data;
     });
@@ -212,7 +259,7 @@ app.controller('CurrentlyPlayingCtrl', function ($scope) {
 app.controller('LyricsCtrl', function ($http, $scope) {
     $scope.showLyrics = function (userid, songid) {
 
-        $http.get('http://192.168.1.135:9080/OdysseyCloud/api/v1/users/' + userid + '/libraries/1/songs/' + songid).
+        $http.get(localStorage.server + 'api/v1/users/' + userid + '/libraries/1/songs/' + songid).
         success(function (data) {
             $scope.lyrics = data;
             bootbox.dialog({
@@ -239,9 +286,62 @@ app.controller('LyricsCtrl', function ($http, $scope) {
     }
 });
 
+app.controller('UserMenuCtrl2', function ($http, $scope) {
+    $scope.cloudSync = function () {
+        /*re_songs("1", function (result) {
+            // retorna un Json array con todas las canciones de la biblioteca lib (result contiene el valor del return) 
+            console.log(result);
+        });*/
+
+
+        var json = {
+            "title": "How Can You Swallow So Much Sleep",
+            "artist": "Bombay Bicycle Club",
+            "album": "A Different Kind of Fix",
+            "year": "2011",
+            "genre": "Rock",
+            "lyrics": "",
+            "lib": "1",
+            "id": "1"
+        }
+
+
+        var json2 = {
+            "title": "2",
+            "artist": "2",
+            "album": "2",
+            "year": "2",
+            "genre": "Rock",
+            "lyrics": "2",
+            "lib": "1",
+            "id": "2"
+        }
+
+        var data = [];
+        data.push(json);
+        data.push(json2);
+
+        $http({
+            url: localStorage.server + 'api/v1/users/' + localStorage.username + '/libraries/1',
+            method: 'POST',
+            data: localStorage.query,
+            dataType: "json",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+
+        }).
+        success(function (data) {
+            $scope.search = data;
+        });
+
+    }
+});
+
 app.controller('UserMenuCtrl', function ($http, $scope) {
     $scope.changePassword = function () {
         var $current_user = localStorage.username;
+
         bootbox.dialog({
             title: "Change password",
             message: '<div class="row">  ' +
@@ -281,7 +381,7 @@ app.controller('UserMenuCtrl', function ($http, $scope) {
                         var name = $('#name').val();
                         var old_password = $('#old_password').val()
                         var new_password = $('#new_password').val()
-                        changePassword(name,old_password,new_password);
+                        changePassword(name, old_password, new_password);
                     }
                 }
             }
@@ -293,6 +393,8 @@ app.controller('UserMenuCtrl', function ($http, $scope) {
     $scope.logoutAccount = function () {
         logout();
     }
+
+
 
 
 
@@ -330,9 +432,9 @@ app.controller('UserMenuCtrl', function ($http, $scope) {
                             alert("U wot m8");
                         } else {
                             var password = $('#password').val()
-                            deleteAccount(name,password);
+                            deleteAccount(name, password);
                         }
-                        
+
                     }
                 }
             }
@@ -340,3 +442,85 @@ app.controller('UserMenuCtrl', function ($http, $scope) {
 
     }
 });
+
+
+
+app.controller('myController', function ($scope, $http, $q) {
+    $scope.startLocalSync = function () {
+        $scope.responses = [];
+        $scope.doneLoading = false;
+        var urls = [
+    'http://192.168.1.135:9080/OdysseyCloud/api/v1/users/1/libraries/1/songs/1?data=all',
+    'http://192.168.1.135:9080/OdysseyCloud/api/v1/users/1/libraries/1/songs/3?data=all'
+  ];
+
+        var promise = $q.all(null);
+        angular.forEach(urls, function (url) {
+            promise = promise.then(function () {
+                return $http({
+                    method: 'GET',
+                    url: url
+                }).then(function (res) {
+                    console.log("Solicitud lista!");
+
+                    var width = $('#loadingBar').width();
+                    var parentWidth = $('#loadingBar').offsetParent().width();
+                    var percent = 100 * width / parentWidth;
+
+                    var cant = 100 / 9;
+                    console.log((percent + cant) + '%');
+                    $('#loadingBar').css("width", (percent + cant) + '%');
+                    $scope.responses.push(res.data);
+                });
+            });
+        });
+
+        promise.then(function () {
+            //This is run after all of your HTTP requests are done
+            console.log("done");
+            $('#loadingBar').css("width", '0%');
+            $('#loading').removeClass('open');
+            $scope.doneLoading = true;
+        })
+    }
+});
+
+function casa($scope, $http, $q) {
+
+    $scope.responses = [];
+    $scope.doneLoading = false;
+    var urls = [
+    'http://192.168.1.135:9080/OdysseyCloud/api/v1/users/1/libraries/1/songs/1?data=all',
+    'http://192.168.1.135:9080/OdysseyCloud/api/v1/users/1/libraries/1/songs/3?data=all'
+  ];
+
+    var promise = $q.all(null);
+    angular.forEach(urls, function (url) {
+        promise = promise.then(function () {
+            return $http({
+                method: 'GET',
+                url: url
+            }).then(function (res) {
+                console.log("Solicitud lista!");
+
+                var width = $('#loadingBar').width();
+                var parentWidth = $('#loadingBar').offsetParent().width();
+                var percent = 100 * width / parentWidth;
+
+                var cant = 100 / 9;
+                console.log((percent + cant) + '%');
+                $('#loadingBar').css("width", (percent + cant) + '%');
+                $scope.responses.push(res.data);
+            });
+        });
+    });
+
+    promise.then(function () {
+        //This is run after all of your HTTP requests are done
+        console.log("done");
+        $('#loadingBar').css("width", '0%');
+        $('#loading').removeClass('open');
+        $scope.doneLoading = true;
+    })
+
+}

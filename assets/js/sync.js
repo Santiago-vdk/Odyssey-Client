@@ -12,13 +12,41 @@ $(document).ready(function () {
             }
             console.log('Upload successful!  Server responded with:', body);
         });*/
-        
+
         var audio = document.getElementById('music-player');
         audio.pause();
-        audio.setAttribute('src',"http://192.168.1.135:9080/OdysseyCloud/api/v1/users/1/libraries/1/songs/1")
+        audio.setAttribute('src', localStorage.server + 'api/v1/users/1/libraries/1/songs/1');
         audio.play(); //call this to play the song right away
-        
+
     });
-    
+
 });
+
+function commitLocal(data) {
+    var parsed = JSON.parse(data);
+    
+    processItems(parsed);
+}
+function asynchFunc(n, fn) {
+    console.log(n);
+    insert_song(JSON.stringify(n));
+    setTimeout(fn, n);
+}
+
+
+function processItems(items) {
+        console.log("fuck");
+
+    var i = 0,
+        length = items.length,
+        fn = function() {
+            if(i < length) {
+                asynchFunc(items[i], fn);
+                
+                i++;
+            }
+        };
+
+    fn();
+}
 

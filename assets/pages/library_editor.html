@@ -56,8 +56,8 @@
         }
     }
     
-    .hidden{
-        visibility:hidden;
+    .hidden {
+        visibility: hidden;
     }
 </style>
 
@@ -96,8 +96,8 @@
 
         $BTN.click(function() {
             $('#loading').addClass('open');
-            
-            
+
+
             var $rows = $TABLE.find('tr:not(:hidden)');
             var headers = [];
             var data = [];
@@ -114,22 +114,22 @@
 
                 // Use the headers from earlier to name our hash keys
                 headers.forEach(function(header, i) {
-                
+
                     h[header] = $td.eq(i).text();
-                    
+
                 });
 
                 data.push(h);
             });
-           
-         
+
+
             $('#loading').removeClass('open');
-            
+
             // Output the result
             $EXPORT.text(JSON.stringify(data));
-            
-            
-          //  commitLocal(localStorage.data);
+
+
+            //  commitLocal(localStorage.data);
 
 
             /*   
@@ -147,64 +147,19 @@
 
 
 
-        function updateSongTable() {
-            var dat = JSON.parse(localStorage["data"]);
-            var parsed = dat[0];
-
-            for (var i = 0; i < dat.length; i++) {
-                var $clone = $TABLE.find('tr.hide').clone(false).removeClass('hide table-line');
-                var isMP3 = dat[i].mp3;
-                var condition;
-                if (isMP3) {
-                    condition = '<i class="fa fa-check"></i>'
-                } else {
-                    condition = '<i class="fa fa-ban"></i>'
-                }
-
-                $clone.append(
-                    '<td contenteditable="true">' + dat[i].title + '</td>' +
-                    '<td contenteditable="true">' + dat[i].artist + '</td>' +
-                    '<td contenteditable="true">' + dat[i].album + '</td>' +
-                    '<td contenteditable="true">' + dat[i].year + '</td>' +
-                    '<td contenteditable="true">' + dat[i].genre + '</td>' +
-                    '<td contenteditable="true">' + dat[i].lyrics + '</td>' +
-                    '<td contenteditable="true" class="hidden">' + dat[i].path + '</td>' +
-                    '<td contenteditable="true" class="hidden">' + dat[i].lib + '</td>' +
-                   
-                    //'<td style="text-align: center;">' + condition + '</td>' +
-                    '<td><span onclick="removeRow(this)" class="table-remove fa fa-times"></span></td>');
-                $TABLE.find('table').append($clone);
-
-                //processSong(dat[i].path, $clone, dat[i].title, dat[i].artist, dat[i].album, dat[i].year);
-            }(i)
-        }
-        updateSongTable();
     });
 
     function removeRow(rkt) {
 
         $(rkt).closest('tr').detach();
     }
-
-    function commitSong() {
-        var fs = require('fs');
-        // read binary data
-        /* var blob = fs.readFileSync(path);
-         var encoded = base64_encode(blob);*/
-
-    }
-
-    function base64_encode(binary_blob) {
-        return new Buffer(binary_blob).toString('base64');
-    }
-
 </script>
 
 
 
 
 <body>
-    <div class="wrapper" style="background: #F1F1F1;overflow-y: scroll;overflow-x: scroll;">
+    <div class="wrapper" style="background: #F1F1F1;overflow-y: scroll;overflow-x: scroll;padding:10px;" ng-controller="EditorCtrl">
 
         <div id="table" class="table-editable">
             <!-- <span class="table-add glyphicon glyphicon-plus"></span> -->
@@ -216,40 +171,38 @@
                     <th>Year</th>
                     <th>Genre</th>
                     <th>Lyrics</th>
-               
+
                     <th class="hidden">Path</th>
                     <th class="hidden">Lib</th>
                     <th></th>
                 </tr>
-                <!-- <tr>
-                    <td contenteditable="true">Stir Fry</td>
-                    <td contenteditable="true">stir-fry</td>
-                    <td contenteditable="true">Casitas Ajenas</td>
-                    <td contenteditable="true">2015</td>
-                    <td contenteditable="true">CHECK</td>
 
-                    <td>
-                        <span class="table-remove glyphicon glyphicon-remove"></span>
+                <tr ng-repeat="x in library">
+                    <td contenteditable="true">{{x.title}}</td>
+                    <td contenteditable="true">{{x.artist}}</td>
+                    <td contenteditable="true">{{x.album}}</td>
+                    <td contenteditable="true">{{x.year}}</td>
+                    <td contenteditable="true">{{x.genre}}</td>
+                    <td contenteditable="true">{{x.lyrics}}</a>
                     </td>
-                </tr> -->
+                    <td class="hidden">{{x.path}}</a>
+                    </td>
+                    <td class="hidden">{{x.lib}}</a>
+                    </td>
 
-                <!-- This is our clonable table line -->
-                <tr class="hide">
-                    <!-- <td contenteditable="true">Untitled</td>
-                    <td contenteditable="true">Untitled</td>
-                    <td contenteditable="true">Untitled</td>
-                    <td contenteditable="true">Untitled</td>
-                    <td contenteditable="true">Untitled</td>
-                    <td>
-                        <span class="table-remove glyphicon glyphicon-remove"></span>
-                    </td> -->
+                    <td><span onclick="removeRow(this)" class="table-remove fa fa-times"></span></td>
+
                 </tr>
+
+
+
             </table>
         </div>
 
-        <button id="export-btn" class="btn btn-success">Commit songs</button>
+        <button id="export-btn" class="btn btn-success">Save changes</button>
         <p id="export"></p>
 
     </div>
 </body>
+
 </html>

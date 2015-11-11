@@ -1,54 +1,44 @@
- function insertSong(songs) {
+ function initializeLocal() {
 
+     mkdir('storage/' + localStorage.username + '/1/');
 
-     var sql = require('sql.js');
+ }
+
+ function mkdir(path, root) {
      var fs = require('fs');
-     // or sql = window.SQL if you are in a browser 
+     var dirs = path.split('/'),
+         dir = dirs.shift(),
+         root = (root || '') + dir + '/';
 
-     // Create a database 
-     var db = new sql.Database();
-     // NOTE: You can also use new sql.Database(data) where 
-     // data is an Uint8Array representing an SQLite database file 
-
-     // Execute some sql 
-     sqlstr = "CREATE TABLE library (id int, song_name char);";
-
-
-     for (var i = 0; i < songs.length; i++) {
-         sqlstr += "INSERT INTO library VALUES ("+ i + ",'" + songs[i].name + "');";
+     try {
+         fs.mkdirSync(root);
+     } catch (e) {
+         //dir wasn't made, something went wrong
+         if (!fs.statSync(root).isDirectory()) throw new Error(e);
      }
 
-     
-     
-     db.run(sqlstr); // Run the query without returning anything 
-     //
-     //     var res = db.exec("SELECT * FROM hello");
-     //     /*
-     //     [
-     //         {columns:['a','b'], values:[[0,'hello'],[1,'world']]}
-     //     ]
-     //     */
-     //
-     //     // Prepare an sql statement 
-     //     var stmt = db.prepare("SELECT * FROM library WHERE a=:aval AND b=:bval");
-     //
-     //     // Bind values to the parameters and fetch the results of the query 
-     //     var result = stmt.getAsObject({
-     //         ':aval': 0,
-     //         ':bval': song
-     //     });
-     //     console.log(result); // Will print {a:1, b:'world'} 
-     //
-     //
-     //     // free the memory used by the statement 
-     //     stmt.free();
-     //     // You can not use your statement anymore once it has been freed. 
-     //     // But not freeing your statements causes memory leaks. You don't want that. 
-     //
-     
-     //Exporto la BD
-     var data = db.export();
-     var buffer = new Buffer(data);
-     fs.writeFileSync("locallibrary.sqlite", buffer);
+     return !dirs.length || mkdir(dirs.join('/'), root);
+ }
 
+ function clear() {
+     rmDir('storage/')
+ }
+
+ function rmDir(dirPath) {
+     console.log("clearing");
+     var fs = require('fs');
+     try {
+         var files = fs.readdirSync(dirPath);
+     } catch (e) {
+         return;
+     }
+     if (files.length > 0)
+         for (var i = 0; i < files.length; i++) {
+             var filePath = dirPath + '/' + files[i];
+             if (fs.statSync(filePath).isFile())
+                 fs.unlinkSync(filePath);
+             else
+                 rmDir(filePath);
+         }
+     fs.rmdirSync(dirPath);
  };

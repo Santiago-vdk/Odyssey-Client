@@ -4,19 +4,15 @@ function login() {
     var user = $('#lg_username').val();
     var pass = $('#lg_password').val();
 
-    console.log(user);
-    console.log(pass);
-
     var passHashed;
     var salt = "$2a$08$b0MHMsT3ErLoTRjpjzsCie";
     var bcrypt = new bCrypt();
 
     function result(newhash) {
         passHashed = newhash;
-
         request({
             method: 'POST',
-            url: 'http://192.168.1.135:9080/OdysseyCloud/api/v1/login',
+            url: localStorage.server + 'api/v1/login',
             headers: {
                 'content-type': 'application/json'
             },
@@ -37,12 +33,32 @@ function login() {
             console.log("Access granted, this is your token: " + info);
             localStorage["username"] = user;
             localStorage["token"] = info.token;
-            window.location.href = "dashboard.html";
-            return false;
-        } else if (!error && response.statusCode == 401) {
-            console.log("Access denied!");
-        }
+            try {
+                
+                //COREGIR
+                //connecting();
+               new_lib("1");
+                
+                initializeLocal();
+                window.location.href = "dashboard.html";
+                localStorage["firstLocalSync"] = false;
+                return false;
+            } catch (err) {
+                console.log(err);
+                logout();
+            }
 
+
+        } else if (!error && response.statusCode == 401) {
+            console.log("Invalid Credentials!");
+            swal("Error", "Invalid credentials.", "error");
+        } else if (!error && response.statusCode == 403) {
+            console.log("Theres already a session active.");
+            swal("Error", "Please logout your account first.", "error");
+        } else if (error) {
+            console.log("Server unavailable!");
+            swal("Error", "Our fault :(", "error");
+        }
     }
 }
 
@@ -67,7 +83,7 @@ function register() {
             if (confirm_passHashed = passHashed) {
                 request({
                     method: 'POST',
-                    url: 'http://192.168.1.135:9080/OdysseyCloud/api/v1/users',
+                    url: localStorage.server + 'api/v1/users',
                     headers: {
                         'content-type': 'application/json'
                     },
@@ -89,8 +105,12 @@ function register() {
             /*var info = JSON.parse(body);
             console.log(info);*/
             console.log("User created!");
+            window.location.href = "index.html";
         } else if (!error && response.statusCode == 202) {
             console.log("Error while creating new user");
+            swal("Error", "Invalid username or password.", "error");
+        } else if (error) {
+            console.log("Server unavailable!");
         }
     }
 }
@@ -101,12 +121,9 @@ function logout() {
     var user = localStorage.username;
     var token = localStorage.token;
 
-    console.log(user);
-    console.log(token);
-
     request({
         method: 'POST',
-        url: 'http://192.168.1.135:9080/OdysseyCloud/api/v1/logout',
+        url: localStorage.server + 'api/v1/logout',
         headers: {
             'content-type': 'application/json'
         },
@@ -121,64 +138,44 @@ function logout() {
     function callback(error, response, body) {
         if (!error && response.statusCode == 200) {
             console.log("Disconected!");
-            localStorage.clear();
-            window.location.href = "index.html";
+            try {
+                clear();
+                localStorage.clear();
+
+                $.ajax({
+                    url: "\config.json",
+                    success: function (data) {
+                        var obj = JSON.parse(data);
+                        localStorage["server"] = obj.server;
+                    }
+                });
+
+                window.location.href = "index.html";
+            } catch (err) {
+
+
+                localStorage.clear();
+
+                $.ajax({
+                    url: "\config.json",
+                    success: function (data) {
+                        var obj = JSON.parse(data);
+                        localStorage["server"] = obj.server;
+                    }
+                });
+
+                window.location.href = "index.html";
+
+            }
         } else if (!error && response.statusCode == 403) {
             console.log("Cannot disconnecting user...");
+        } else if (error) {
+            console.log("Server unavailable!");
         }
 
     }
 }
 
-function login() {
-    var request = require('request');
-
-    var user = $('#lg_username').val();
-    var pass = $('#lg_password').val();
-
-    console.log(user);
-    console.log(pass);
-
-    var passHashed;
-    var salt = "$2a$08$b0MHMsT3ErLoTRjpjzsCie";
-    var bcrypt = new bCrypt();
-
-    function result(newhash) {
-        passHashed = newhash;
-
-        request({
-            method: 'POST',
-            url: 'http://192.168.1.135:9080/OdysseyCloud/api/v1/login',
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify({
-                username: user,
-                password: passHashed
-            })
-
-        }, callback);
-
-
-    }
-    bcrypt.hashpw(pass, salt, result, function () {});
-
-    function callback(error, response, body) {
-        if (!error && response.statusCode == 200) {
-            var info = JSON.parse(body);
-            console.log("Access granted, this is your token: " + info);
-            localStorage["username"] = user;
-            localStorage["token"] = info.token;
-            window.location.href = "dashboard.html";
-            return false;
-        } else if (!error && response.statusCode == 401) {
-            console.log("Access denied!");
-        } else if (!error && response.statusCode == 403) {
-            console.log("PLease close any open sessions...");
-        }
-
-    }
-}
 
 function changePassword(username, old_password, new_password) {
     var request = require('request');
@@ -192,7 +189,7 @@ function changePassword(username, old_password, new_password) {
         function result_compare(newPassHash) {
             request({
                 method: 'PUT',
-                url: 'http://192.168.1.135:9080/OdysseyCloud/api/v1/users/' + username,
+                url: localStorage.server + 'api/v1/users/' + username + "/?type=password",
                 headers: {
                     'content-type': 'application/json'
                 },
@@ -214,6 +211,8 @@ function changePassword(username, old_password, new_password) {
             console.log("Password updated!");
         } else if (!error && response.statusCode == 401) {
             console.log("Forbidden access");
+        } else if (!error && response.statusCode == 404) {
+            console.log("Server unavailable!");
         }
     }
 }
@@ -225,18 +224,18 @@ function deleteAccount(username, password) {
     var bcrypt = new bCrypt();
 
     function result(hashedPassword) {
-             request({
-                method: 'DELETE',
-                url: 'http://192.168.1.135:9080/OdysseyCloud/api/v1/users/' + username,
-                headers: {
-                    'content-type': 'application/json'
-                },
-                body: JSON.stringify({
-                    username: username,
-                    password: hashedPassword,
-                    token: localStorage.token
-                })
-            }, callback);
+        request({
+            method: 'DELETE',
+            url: localStorage.server + 'api/v1/users/' + username,
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                username: username,
+                password: hashedPassword,
+                token: localStorage.token
+            })
+        }, callback);
     }
     bcrypt.hashpw(password, salt, result, function () {});
 
@@ -248,6 +247,8 @@ function deleteAccount(username, password) {
             console.log("Forbidden request!");
         } else if (!error && response.statusCode == 403) {
             console.log("Access denied!");
+        } else if (error) {
+            console.log("Server unavailable!");
         }
     }
 }
