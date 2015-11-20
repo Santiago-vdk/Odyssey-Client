@@ -8,7 +8,7 @@
 
 <style>
     .ng-scope {
-       /*height: 100%;*/
+        /*height: 100%;*/
     }
     
     .widget-area.blank {
@@ -189,24 +189,69 @@
 </style>
 
 
+<script>
+    function saveChanges(rkt) {
+        var request = require('request');
+
+        var title = $(rkt).closest('tr').find('.title').text();
+        var artist = $(rkt).closest('tr').find('.artist').text();
+        var album = $(rkt).closest('tr').find('.album').text();
+        var year = $(rkt).closest('tr').find('.year').text();
+        var genre = $(rkt).closest('tr').find('.genre').text();
+        var id = $(rkt).closest('tr').find('.id').text();
+        var lyrics = $(rkt).closest('tr').find('.lyrics').text();
+
+        var json = {
+            "title": title,
+            "artist": artist,
+            "album": album,
+            "year": year,
+            "genre": genre,
+            "id":id,
+            "lyrics":lyrics
+        }
+
+        request({
+            method: 'PUT',
+            url: localStorage.server + 'api/v1/users/' + localStorage.tempUser + "/libraries/1/songs/" + id + "?type=friend",
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(json)
+        }, callback);
+    
+
+
+
+    function callback(error, response, body) {
+        if (!error && response.statusCode == 200) {
+            console.log("Password updated!");
+        }
+    }
+
+
+
+    }
+</script>
+
 
 
 <body>
-    <div class="wrapper" style="width:100%;overflow-y:scroll;overflow-x: hidden;background: #F1F1F1;height:100%" ng-controller="LibraryCtrl">
+    <div id="jesus" class="wrapper" style="width:100%;overflow-y:scroll;overflow-x: hidden;background: #F1F1F1;height:100%" ng-controller="LibraryCtrl">
 
-        <div class="information span2 well" >
+        <div class="information span2 well">
             <div style="float:left;top:0">
                 <h2 style="margin:5;">Biblioteca #{{libraryid}}</h2>
                 <h3 style="margin:5;"> <small>{{userid}}'s library</small></h3>
                 <br>
-                <h4 style="margin:5;" class="ng-show" ng-show="currentUser(userid)"><p><a class="btn btn-default btn-large" href="">External sync</a></p></h4>
+                <h4 style="margin:5;" class="ng-show" ng-show="currentUser(userid)" ng-click="externalSync()"><p><a class="btn btn-default btn-large" href="">External sync</a></p></h4>
             </div>
             <div style="float:right">
                 <p style="text-align: right;"><span><a href="{{'#/profile/'+userid}}"><img alt="" ng-src="{{ 'http://api.adorable.io/avatars/285/' + userid}}"></a></span></p>
-                
-                <h4 style="margin:5;text-align: right;">  <p><a class="btn btn-success" href="" ng-click="addFriend(userid)"><i class="fa fa-user-plus"></i> Add friend</a></p></h4>
-                
-                <h4 style="margin:5;text-align: rigth;">  <p><a class="btn btn-danger" href="#"><i class="fa fa-user-times"></i> Remove friend</a></p></h4>
+
+                <h4 style="margin:5;text-align: right;"><p><a class="btn btn-success" href="" ng-click="addFriend(userid)"><i class="fa fa-user-plus"></i> Add friend</a></p></h4>
+
+                <h4 style="margin:5;text-align: rigth;">  <p><a class="btn btn-danger" href="" ng-click="deleteFriend(userid)"><i class="fa fa-user-times"></i> Remove friend</a></p></h4>
             </div>
         </div>
 
@@ -221,22 +266,26 @@
                         <th>Album</th>
                         <th>Year</th>
                         <th>Genre</th>
+                        <th>Global ID</th>
                         <th>Lyrics</th>
+                        
                         <th style="padding-right: 0;padding-left: 0;">Play</th>
                         <th style="width:74px;"></th>
                         <th class="ng-show" ng-show="currentUser(userid)" style="width:74px;"></th>
                     </tr>
 
                     <tr ng-repeat="x in library.songs">
-                        <td contenteditable="true">{{x.title}}</td>
-                        <td contenteditable="true">{{x.artist}}</td>
-                        <td contenteditable="true">{{x.album}}</td>
-                        <td contenteditable="true">{{x.year}}</td>
-                        <td contenteditable="true">{{x.genre}}</td>
-                        <td><a style="height:33px;" class="btn btn-default" href="" ng-click="showLyrics(userid,x.title)" ng-controller="LyricsCtrl"><i class="fa fa-book"></i> Lyrics</a></td>
-                        <td><a href="{{'#/song_info/' + userid + '/' + libraryid + '/' + x.title}}"><i class="fa fa-play"></i></a></td>
-                        <td><a class="btn btn-success" href="{{'#/library/' + userid + '/1'}}">Save</a></td>
-                        <td class="ng-show" ng-show="currentUser(userid)"><a class="btn btn-warning" href="" ng-click="changeVersion()">Version</a></td>
+                        <td contenteditable="true" class="title">{{x.title}}</td>
+                        <td contenteditable="true" class="artist">{{x.artist}}</td>
+                        <td contenteditable="true" class="album">{{x.album}}</td>
+                        <td contenteditable="true" class="year">{{x.year}}</td>
+                        <td contenteditable="true" class="genre">{{x.genre}}</td>
+                        <td contenteditable="false" class="id">{{x.id}}</td>
+                        <td contenteditable="true" class="lyrics">{{x.lyrics}}</td>
+                        <!--<td><a style="height:33px;" class="btn btn-default" href="" ng-click="showLyrics(userid,x.id)" ng-controller="LyricsCtrl"><i class="fa fa-book"></i> Lyrics</a></td> -->
+                        <td><a href="{{'#/song_info/' + userid + '/' + 1 + '/' + x.id}}"><i class="fa fa-play"></i></a></td>
+                        <td><a class="btn btn-success" href="" onclick="saveChanges(this)">Save</a></td>
+                        <td class="ng-show" ng-show="currentUser(userid)"><a class="btn btn-warning" href="" ng-click="changeVersion(x.id)">Version</a></td>
                     </tr>
 
                     <tr class="hide">

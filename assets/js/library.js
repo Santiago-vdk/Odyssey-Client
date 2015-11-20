@@ -22,7 +22,7 @@ var data = [
 $(function () {
     $('#jstree').jstree({
         'core': {
-            'data': {
+            /*'data': {
                 "url": localStorage.server + 'api/v1/users/1/libraries/1?type=tree',
                 "type": 'GET',
                 'dataType': 'JSON',
@@ -38,7 +38,7 @@ $(function () {
                         "id": n.attr ? n.attr("id").replace("node-", "") : 1,
                     };
                 }
-            }
+            }*/
         }
     });
 });
@@ -57,9 +57,9 @@ $(document).ready(function () {
     });
 
 
-    $('#jstree').bind("dblclick.jstree", function (event) {
+    /*$('#jstree').bind("dblclick.jstree", function (event) {
         var node = $(event.target).closest("li");
         var data = node.data("jstree");
         console.log("Doble click " + data);
-    });
+    });*/
 });

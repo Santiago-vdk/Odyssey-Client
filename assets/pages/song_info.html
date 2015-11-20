@@ -164,26 +164,31 @@
 
         <div class="information span2 well">
             <div style="float:left;top:0">
-                <h2 style="margin:5;">{{songid}}</h2>
+                <h2 style="margin:5;">{{song.title}}</h2>
                 <br>
                 <h3 style="margin:5;"> <small>Uploaded By: {{userid}}</small></h3>
                
                 <div class="btn-group" role="group" >
-                    <button type="button" class="btn btn-danger"><i class="fa fa-thumbs-down fa-2x" style="color:black"></i></button>
-                    <button type="button" class="btn btn-primary" ><i class="fa fa-thumbs-up fa-2x" style="color:black"></i></button>
+                    <button type="button" ng-click="dislikeSong(song.globalid, userid)" class="btn btn-danger"><i class="fa fa-thumbs-down fa-2x" style="color:black"></i></button>
+                    <button type="button" ng-click="likeSong(song.globalid, userid)" class="btn btn-primary" ><i class="fa fa-thumbs-up fa-2x" style="color:black"></i></button>
                     
                 </div>
 
 
-                <h4 style="margin:5;">  <p><a class="btn btn-warning" href="#"><i class="fa fa-play"></i> Stream</a></p></h4>
+                <h4 style="margin:5;">  <p><a class="btn btn-warning" href="" ng-click="streamSong(song.globalid, userd)"><i class="fa fa-play"></i> Stream</a></p></h4>
 
             </div>
             <div style="float:right">
                 <h2 style="margin:5;"> <small>Artist: {{song.artist}}</small></h2>
                 <h2 style="margin:5;"><small>Album: {{song.album}}</small></h2>
                 <h2 style="margin:5;"><small>Year: {{song.year}}</small></h2>
+                
+                <!--
                 <a class="btn btn-success" href="{{'#/library/' + userid + '/1'}}"><i class="fa fa-pencil"></i> EDIT</a>
                 <a class="btn btn-info" href="" ng-click="showLyrics(userid,songid)" ng-controller="LyricsCtrl"><i class="fa fa-book"></i> Lyrics</a>
+                -->
+                
+                
                 <a class="btn btn-default" href="{{'#/profile/' + userid}}"><i class="fa fa-user"></i> User</a>
             </div>
         </div>
@@ -204,7 +209,9 @@
                             </a>
                             <div class="media-body">
                                 <h4 class="media-heading user_name">{{x.user}}</h4> {{x.value}}
+                                
                                 <p><small><a href="">Like</a> - <a href="">Share</a></small></p>
+                                
                             </div>
                         </div>
 
@@ -220,14 +227,14 @@
                 <div class="widget-area no-padding blank">
                     <div class="status-upload">
                         <form>
-                            <textarea placeholder="What are you doing right now?"></textarea>
+                            <textarea id="commenttext" placeholder="What do you think about the song :)?"></textarea>
                             <ul>
                                 <li><a title="" data-toggle="tooltip" data-placement="bottom" data-original-title="Audio"><i class="fa fa-music"></i></a></li>
                                 <li><a title="" data-toggle="tooltip" data-placement="bottom" data-original-title="Video"><i class="fa fa-video-camera"></i></a></li>
                                 <li><a title="" data-toggle="tooltip" data-placement="bottom" data-original-title="Sound Record"><i class="fa fa-microphone"></i></a></li>
                                 <li><a title="" data-toggle="tooltip" data-placement="bottom" data-original-title="Picture"><i class="fa fa-picture-o"></i></a></li>
                             </ul>
-                            <button type="submit" class="btn btn-success green"><i class="fa fa-share"></i> Share</button>
+                            <button type="submit" ng-click="postComment(song.globalid, userid)" class="btn btn-success green"><i class="fa fa-share"></i> Share</button>
                         </form>
                     </div>
                     <!-- Status Upload  -->

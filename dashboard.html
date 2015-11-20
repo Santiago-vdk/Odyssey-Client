@@ -52,11 +52,10 @@
     <script>
          $(document).ready(function () {
 
-             if(localStorage.firstLocalSync === 'false'){
-                 angular.element(document.getElementById('loading')).scope().startLocalSync();
-                 $('#loading').addClass('open');
-                 localStorage["firstLocalSync"] = true;
-               
+             if(localStorage.localSync === "false"){
+                 var $scope = angular.element(document.getElementById('loading')).scope();
+                $('#loading').addClass('open');
+                 
              }
          });
     
@@ -77,7 +76,7 @@
         </form>
     </div>
 
-    <div id="loading" ng-controller="myController">
+    <div id="loading" ng-controller="myController3">
         <h1 style="color:white;">Loading Cloud library...</h1>
         <div class="text-center center">
             <div class="progress center-block" style="width:800px;height:30px;">
@@ -124,15 +123,15 @@
 
                     <div id="jstree" style="float:left;">
                         <!-- in this example the tree is populated from inline HTML -->
-                        <!-- 
+                        
                         <ul>
-                            <li id="root" data-jstree='{"icon":"fa fa-book"}'>Music Library 1
-                              <ul>
+                            <li id="root" data-jstree='{"icon":"fa fa-book"}'>Local Library
+                            <!--  <ul>
                                     <li data-jstree='{ "icon":"fa fa-music" }'>Rayando el Sol - Mana</li>
                                     <li data-jstree='{"icon":"fa fa-music" }'>Dig up her boner - Misfits</li>
-                                </ul>
+                                </ul> -->
                             </li>
-                        </ul> -->
+                        </ul> 
                     </div>
 
                 </div>

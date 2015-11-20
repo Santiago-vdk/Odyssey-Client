@@ -20,8 +20,9 @@
 
          //DRAG & DROP CANCIONES
          require("drag-and-drop-files")(dropTarget, function (files) {
-             console.log("Got some files:", files)
+             // console.log("Got some files:", files)
              try {
+                 localStorage.data = "[]";
                  handleTracks(files);
              } catch (err) {
                  console.log("Hubo un error: " + err);
@@ -30,7 +31,7 @@
      });
 
      win.on('close', function () {
-         
+
          $.getScript("assets/js/authentication/auth.js", function () {
              logout(this);
              this.hide();
@@ -104,49 +105,47 @@
      this.genre = genre;
      this.lyrics = lyrics;
      this.path = path;
-     //this.mp3 = mp3;
-    this.lib = library;
+     this.lib = library;
  }
-
 
  function handleTracks(trackArray) {
      var subarray = [];
-     //trackArray tiene un arreglo con todas las canciones
-     for (var i = 0; i < trackArray.length; i++) {
-         var path = trackArray[i].path;
-         go(path, i, trackArray, subarray);
 
-     }(i) //Linea magica
- }
+     trackArray.forEach(function (eachDick, index) {
+         parseFile(eachDick, function (result) {
+             subarray.push(result);
 
- function go(path, i, trackArray, subarray) {
+             if ((trackArray.length - 1) === index) {
+                 registerInfo(subarray);
+             }
+         });
 
-
-     var parser = mm(fs.createReadStream(trackArray[i].path), function (err, metadata) {
-         /*console.log(metadata);
-         console.log(metadata.title);
-         console.log(metadata.artist[0]);
-         console.log(metadata.album);
-         console.log(metadata.year);*/
-         
-        /* var isMP3 = true;
-   
-         if (metadata.artist[0] === undefined) {
-             isMP3 = false;
-         }*/
-
-         var songObject = new Song(metadata.title, metadata.artist[0], metadata.album, metadata.year, metadata.genre[0], "", path, "1");
-         subarray.push(songObject);
-         log(subarray);
      });
  }
 
+ function parseFile(eachDick, fn) {
 
- // post_song(base64_encode(trackArray[i].path));
+     var parser = mm(fs.createReadStream(eachDick.path), function (err, metadata) {
+       //  var genre = metadata.genre[0];
+
+         var genre = "undefined";
+         var songObject = new Song(metadata.title, metadata.artist[0], metadata.album, metadata.year, genre, "", eachDick.path, "1");
 
 
- function log(data) {
+         fn(songObject);
+     });
+
+ }
+
+ function registerInfo(data) {
      localStorage["data"] = JSON.stringify(data);
+     /*
+          var scope = angular.element(document.getElementById('wrapper')).scope();
+          scope.$apply(function () {
+              scope.fillTable(data);
+          });*/
+
+
      window.location.href = "#/dragged_songs";
  }
 
@@ -158,7 +157,6 @@
  }
 
  function post_song(data) {
-
      request({
          method: 'POST',
          url: localStorage.server + 'api/v1/users/1/libraries/1/songs',
@@ -179,38 +177,3 @@
      }
 
  }
-
-
-
- /*
-
-     
-     
-     
-               // create a new parser from a node ReadStream 
-                    
-
-                     var content;
-
-                     fs.readFile(files[i].path, 'ascii', 'rb', function (err, data) {
-                         if (err) throw err;
-
-                         console.log(data);
-
-                         
-
-
-
-                     });
-
-
-
-                     //Insertar cancion en SQLite
-                     //insertSong(files[i]);
-
-                     //Agregar cancion al arbol
-                     //addSong(files[i]);
-
- */
-
-

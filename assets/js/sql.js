@@ -1,697 +1,868 @@
 var Connection = require('tedious').Connection;
-  var Request = require('tedious').Request;
-  var TYPES = require('tedious').TYPES;
+var Request = require('tedious').Request;
+var TYPES = require('tedious').TYPES;
 
-  
-  
- 
-var scriptInicial = 'CREATE TABLE Library( Lib_name VARCHAR(16) NOT NULL PRIMARY KEY(Lib_NAME) )  CREATE TABLE Songs( Song_ID INT NOT NULL IDENTITY(0,1), Song_Name VARCHAR(64) NOT NULL, Song_Artist VARCHAR(32) NOT NULL,Song_Album VARCHAR(32) NOT NULL, Song_Year VARCHAR(4) NOT NULL, Song_Gen VARCHAR(24) NOT NULL, Lyrics VARCHAR(1000) NULL, Lib_name VARCHAR(16) NOT NULL,  PRIMARY KEY(Song_ID))  ALTER TABLE Songs 	ADD CONSTRAINT Songs_fk FOREIGN KEY(Lib_name) REFERENCES Library(Lib_name) ON DELETE CASCADE; CREATE TABLE Data( Song_ID INT NOT NULL, Path_Data VARCHAR(128) ) ALTER TABLE Data 	ADD CONSTRAINT Data_fk FOREIGN KEY(Song_ID) REFERENCES Songs(Song_ID) ON DELETE CASCADE';  
-var procedure1 ='CREATE PROCEDURE new_lib ( @lib VARCHAR(MAX) ) AS BEGIN INSERT INTO Library (Lib_name) VALUES (@lib) END';
+
+
+
+var scriptInicial = 'CREATE TABLE Library( Lib_name VARCHAR(16) NOT NULL PRIMARY KEY(Lib_NAME) )  CREATE TABLE Songs( Song_ID INT NOT NULL IDENTITY(0,1), Song_Name VARCHAR(64) NOT NULL, Song_Artist VARCHAR(64) NOT NULL,Song_Album VARCHAR(64) NOT NULL, Song_Year VARCHAR(4) NOT NULL, Song_Gen VARCHAR(24) NOT NULL, Lyrics VARCHAR(1000) NULL, Lib_name VARCHAR(16) NOT NULL,  PRIMARY KEY(Song_ID))  ALTER TABLE Songs 	ADD CONSTRAINT Songs_fk FOREIGN KEY(Lib_name) REFERENCES Library(Lib_name) ON DELETE CASCADE; CREATE TABLE Data( Song_ID INT NOT NULL, Path_Data VARCHAR(128) ) ALTER TABLE Data 	ADD CONSTRAINT Data_fk FOREIGN KEY(Song_ID) REFERENCES Songs(Song_ID) ON DELETE CASCADE';
+var procedure1 = 'CREATE PROCEDURE new_lib ( @lib VARCHAR(MAX) ) AS BEGIN INSERT INTO Library (Lib_name) VALUES (@lib) END';
 var procedure2 = 'CREATE PROCEDURE insert_song1 (@lib VARCHAR(MAX),@name VARCHAR(MAX),@artist VARCHAR(MAX),@album VARCHAR(MAX),@year VARCHAR(MAX),@gen VARCHAR(MAX),@Lyrics VARCHAR(MAX),@Path VARCHAR(MAX) ) AS BEGIN INSERT INTO Songs (Song_Name,Song_Artist,Song_Album,Song_Year,Song_Gen,Lyrics,Lib_name) VALUES (@name,@artist,@album,@year,@gen,@Lyrics,@lib) END';
 //var procedure3 = 'CREATE PROCEDURE re_songs ( @lib VARCHAR(MAX) ) AS BEGIN SELECT S.Song_ID,S.Song_Name,S.Song_Artist,S.Song_Album,S.Song_Year,S.Song_Gen,S.Lyrics FROM Songs as S WHERE Lib_name=@lib END';
 //var procedure4 = 'CREATE PROCEDURE re_song_data ( @id INT ) AS BEGIN SELECT D.Path_Data FROM Data as D WHERE Song_ID=@id END';
 var procedure3 = 'CREATE PROCEDURE drop_song ( @id INT ) AS BEGIN DELETE FROM Songs WHERE Song_ID=@id END';
 var procedure4 = 'CREATE PROCEDURE update_song ( @lib VARCHAR(MAX), @id INT, @name VARCHAR(MAX), @artist VARCHAR(MAX), @album VARCHAR(MAX), @year VARCHAR(MAX), @gen VARCHAR(MAX), @Lyrics VARCHAR(MAX) ) AS BEGIN UPDATE Songs SET Song_Name=@name,Song_Artist=@artist,Song_Album=@album,Song_Year=@year,Song_Gen=@gen,Lyrics=@Lyrics WHERE Song_Id=@id and Lib_name=@lib;  END';
-var procedure5 = 'CREATE PROCEDURE insert_song2 (@name VARCHAR(MAX),@artist VARCHAR(MAX),@Path VARCHAR(MAX)) AS BEGIN DECLARE @id INT SET @id = (SELECT Song_ID FROM Songs WHERE Song_Name=@name and Song_Artist=@artist) INSERT INTO Data (Song_ID,Path_Data) Values (@id,@Path) END';  
+var procedure5 = 'CREATE PROCEDURE insert_song2 (@name VARCHAR(MAX),@artist VARCHAR(MAX),@Path VARCHAR(MAX)) AS BEGIN DECLARE @id INT SET @id = (SELECT Song_ID FROM Songs WHERE Song_Name=@name and Song_Artist=@artist) INSERT INTO Data (Song_ID,Path_Data) Values (@id,@Path) END';
 
 var procedure6 = 'CREATE PROCEDURE insert_song_withID (@id INT,@lib VARCHAR(MAX),@name VARCHAR(MAX),@artist VARCHAR(MAX),@album VARCHAR(MAX),@year VARCHAR(MAX),@gen VARCHAR(MAX),@Lyrics VARCHAR(MAX),@Path VARCHAR(MAX)) AS BEGIN SET IDENTITY_INSERT Songs ON INSERT INTO Songs (Song_ID,Song_Name,Song_Artist,Song_Album,Song_Year,Song_Gen,Lyrics,Lib_name) VALUES (@id,@name,@artist,@album,@year,@gen,@Lyrics,@lib) SET IDENTITY_INSERT Songs OFF END';
 
-  
-  var config = {
+
+var config = {
     userName: 'SA',
     password: 'Badilla94',
     server: '192.168.1.129',
-	options:{
-		database: 'OdysseyDB'
-	}
-  };
-  
-  var config2 = {
-			userName: 'SA',
-			password: 'Badilla94',
-			server: '192.168.1.129'
-	};
-  
-  
-  function initialize(){
-	
-			var connection = new Connection(config);
+    options: {
+        database: 'OdysseyDB'
+    }
+};
 
-			  connection.on('connect', function(err) {
-				  executeStatement();
-				}
-			  );
-			  
-			  
+var config2 = {
+    userName: 'SA',
+    password: 'Badilla94',
+    server: '192.168.1.129'
+};
 
-			function executeStatement() {
-				
-			  request = new Request(scriptInicial, function(err, rowCount) {
-				if (err) {
-				
-				  console.log(err);
-				} else {
-				  console.log(rowCount + ' rows');
-				  makeproc1();
-				}
-				
-				connection.close();
-			  });
 
-			  connection.execSql(request);
-			}
+function initialize() {
 
-			
-  
-  }
-  
-  function makeproc1(){
-  
-			var connection = new Connection(config);
+    var connection = new Connection(config);
 
-			  connection.on('connect', function(err) {
-				  executeStatement();
-				}
-			  );
-			  
-			  
+    connection.on('connect', function (err) {
+        executeStatement();
+    });
 
-			function executeStatement() {
-				
-			  request = new Request(procedure1, function(err, rowCount) {
-				if (err) {
-				
-				  console.log(err);
-				} else {
-				  console.log(rowCount + ' rows');
-				  makeproc2();
-				}
-				
-				connection.close();
-			  });
 
-			  connection.execSql(request);
-			}
 
-			
-  
-  }
-  
-  
-  function makeproc2(){
-  
-			var connection = new Connection(config);
+    function executeStatement() {
 
-			  connection.on('connect', function(err) {
-				  executeStatement();
-				}
-			  );
-			  
-			  
+        request = new Request(scriptInicial, function (err, rowCount) {
+            if (err) {
 
-			function executeStatement() {
-				
-			  request = new Request(procedure2, function(err, rowCount) {
-				if (err) {
-				
-				  console.log(err);
-				} else {
-				  console.log(rowCount + ' rows');
-				  makeproc3();
-				}
-				
-				connection.close();
-			  });
+                console.log(err);
+            } else {
+                console.log(rowCount + ' rows');
+                makeproc1();
+            }
 
-			  connection.execSql(request);
-			}
+            connection.close();
+        });
 
-			
-  
-  }
-  
-  
-  function makeproc3(){
-  
-			var connection = new Connection(config);
+        connection.execSql(request);
+    }
 
-			  connection.on('connect', function(err) {
-				  executeStatement();
-				}
-			  );
-			  
-			  
 
-			function executeStatement() {
-				
-			  request = new Request(procedure3, function(err, rowCount) {
-				if (err) {
-				
-				  console.log(err);
-				} else {
-				  console.log(rowCount + ' rows');
-				  makeproc4();
-				}
-				
-				connection.close();
-			  });
-			  connection.execSql(request);
-			}
-
-			
-  
-  }
-  
-  function makeproc4(){
-  
-			var connection = new Connection(config);
-
-			  connection.on('connect', function(err) {
-				  executeStatement();
-				}
-			  );
-			  
-			  
-
-			function executeStatement() {
-				
-			  request = new Request(procedure4, function(err, rowCount) {
-				if (err) {
-				
-				  console.log(err);
-				} else {
-				  console.log(rowCount + ' rows');
-				  makeproc5();
-				}
-				
-				connection.close();
-			  });
-			  connection.execSql(request);
-			}
-
-			
-  
-  }
-  
-  function makeproc5(){
-  
-			var connection = new Connection(config);
-
-			  connection.on('connect', function(err) {
-				  executeStatement();
-				}
-			  );
-			  
-			  
-
-			function executeStatement() {
-				
-			  request = new Request(procedure5, function(err, rowCount) {
-				if (err) {
-				
-				  console.log(err);
-				} else {
-				  console.log(rowCount + ' rows');
-				  makeproc6();
-				}
-				
-				connection.close();
-			  });
-
-			  connection.execSql(request);
-			}
-  
-  }
-
-   function makeproc6(){
-  
-			var connection = new Connection(config);
-
-			  connection.on('connect', function(err) {
-				  executeStatement();
-				}
-			  );
-			  
-			  
-
-			function executeStatement() {
-				
-			  request = new Request(procedure6, function(err, rowCount) {
-				if (err) {
-				
-				  console.log(err);
-				} else {
-				  console.log(rowCount + ' rows');
-				}
-				
-				connection.close();
-			  });
-
-			  connection.execSql(request);
-			}
-  
-  }
-  
-
-  
-    
-	
-function connecting(){
-
-			var script = 'USE [master] if exists(select * from sysdatabases where name = \'OdysseyDB\' ) DROP DATABASE [OdysseyDB]';
-			
-			
-			var connection = new Connection(config2);
-
-			  connection.on('connect', function(err) {
-				  executeStatement();
-				}
-			  );
-			  
-			  
-
-			function executeStatement() {
-				
-			  request = new Request(script, function(err, rowCount) {
-				if (err) {
-				  console.log(err);
-				} else {
-				  console.log(rowCount + ' rows');
-				  createDB();
-				}
-				
-				connection.close();
-			  });
-
-			  connection.execSql(request);
-			}
-	
-		
-  
 
 }
 
-function createDB(){
-	console.log("here");
-	var create = 'CREATE DATABASE [OdysseyDB]';
-			
-			var connection = new Connection(config2);
+function makeproc1() {
 
-			  connection.on('connect', function(err) {
-				  executeStatement();
-				}
-			  );
-			  
-			function executeStatement() {
-				
-			  request = new Request(create, function(err, rowCount) {
-				if (err) {
-				
-				  console.log(err);
-				} else {
-				  console.log(rowCount + ' rows');
-				  initialize();
-				}
-				
-				connection.close();
-			  });
+    var connection = new Connection(config);
 
-			  connection.execSql(request);
-			}
-			
-			
-}
-  
-  
-  function insert_song(songJson){
-	
+    connection.on('connect', function (err) {
+        executeStatement();
+    });
 
-			  var connection = new Connection(config);
 
-			  connection.on('connect', function(err) {
-				  executeStatement();
-				  
-				}
-				);
-				
-				
-				function executeStatement() {
-					  request = new Request("insert_song1", function(err) {
-						if (err) {
-						  console.log(err);
-						} 
-						else{
-							insert_song2(songJson);
-						}
 
-						connection.close();
-						
-					  });
-					  
-					  var query = JSON.parse(songJson);
-					  
-					  
-						var lib =query.lib;
-						var name = query.title;
-						var artist = query.artist;
-						var album = query.album;
-						var year = query.year;
-						var Lyrics = query.lyrics;
-						var Path = query.path;
-						var genre = query.genre;
+    function executeStatement() {
 
-						request.addParameter( 'lib',TYPES.VarChar, lib);
-						request.addParameter( 'name',TYPES.VarChar, name);
-						request.addParameter( 'artist',TYPES.VarChar, artist);
-						request.addParameter( 'album',TYPES.VarChar, album);
-						request.addParameter( 'year',TYPES.VarChar, year);
-						request.addParameter( 'Lyrics',TYPES.VarChar, Lyrics);
-						request.addParameter( 'Path',TYPES.VarChar, Path);
-						request.addParameter( 'gen',TYPES.VarChar, genre);
-						
+        request = new Request(procedure1, function (err, rowCount) {
+            if (err) {
 
-						connection.callProcedure(request);
-						
-						}
+                console.log(err);
+            } else {
+                console.log(rowCount + ' rows');
+                makeproc2();
+            }
+
+            connection.close();
+        });
+
+        connection.execSql(request);
+    }
+
+
 
 }
 
 
-function insert_song2(songJson){
-	
+function makeproc2() {
 
-			  var connection = new Connection(config);
+    var connection = new Connection(config);
 
-			  connection.on('connect', function(err) {
-				  executeStatement();
-				  
-				}
-				);
-				
-				
-				function executeStatement() {
-					  request = new Request("insert_song2", function(err) {
-						if (err) {
-						  console.log(err);
-						} 
+    connection.on('connect', function (err) {
+        executeStatement();
+    });
 
-						connection.close();
-						//printTable();
-					  });
-					  
-					  
-					   var query = JSON.parse(songJson);
-					   
-						var name = query.title;
-						var artist = query.artist;
-						var Path = query.path;
 
-						request.addParameter( 'name',TYPES.VarChar, name);
-						request.addParameter( 'artist',TYPES.VarChar, artist);
-						request.addParameter( 'Path',TYPES.VarChar, Path);
-						
 
-						connection.callProcedure(request);
-						
-						}
+    function executeStatement() {
+
+        request = new Request(procedure2, function (err, rowCount) {
+            if (err) {
+
+                console.log(err);
+            } else {
+                console.log(rowCount + ' rows');
+                makeproc3();
+            }
+
+            connection.close();
+        });
+
+        connection.execSql(request);
+    }
+
+
+
+}
+
+
+function makeproc3() {
+
+    var connection = new Connection(config);
+
+    connection.on('connect', function (err) {
+        executeStatement();
+    });
+
+
+
+    function executeStatement() {
+
+        request = new Request(procedure3, function (err, rowCount) {
+            if (err) {
+
+                console.log(err);
+            } else {
+                console.log(rowCount + ' rows');
+                makeproc4();
+            }
+
+            connection.close();
+        });
+        connection.execSql(request);
+    }
+
+
+
+}
+
+function makeproc4() {
+
+    var connection = new Connection(config);
+
+    connection.on('connect', function (err) {
+        executeStatement();
+    });
+
+
+
+    function executeStatement() {
+
+        request = new Request(procedure4, function (err, rowCount) {
+            if (err) {
+
+                console.log(err);
+            } else {
+                console.log(rowCount + ' rows');
+                makeproc5();
+            }
+
+            connection.close();
+        });
+        connection.execSql(request);
+    }
+
+
+
+}
+
+function makeproc5() {
+
+    var connection = new Connection(config);
+
+    connection.on('connect', function (err) {
+        executeStatement();
+    });
+
+
+
+    function executeStatement() {
+
+        request = new Request(procedure5, function (err, rowCount) {
+            if (err) {
+
+                console.log(err);
+            } else {
+                console.log(rowCount + ' rows');
+                makeproc6();
+            }
+
+            connection.close();
+        });
+
+        connection.execSql(request);
+    }
+
+}
+
+function makeproc6() {
+
+    var connection = new Connection(config);
+
+    connection.on('connect', function (err) {
+        executeStatement();
+        new_lib("1");
+    });
+
+
+
+    function executeStatement() {
+
+        request = new Request(procedure6, function (err, rowCount) {
+            if (err) {
+
+                console.log(err);
+            } else {
+                console.log(rowCount + ' rows');
+            }
+
+            connection.close();
+        });
+
+        connection.execSql(request);
+    }
 
 }
 
 
 
-function insert_song_withID(songJson){
-	
 
-			  var connection = new Connection(config);
 
-			  connection.on('connect', function(err) {
-				  executeStatement();
-				  
-				}
-				);
-				
-				
-				function executeStatement() {
-					  request = new Request("insert_song_withID", function(err) {
-						if (err) {
-						  console.log(err);
-						} 
+function connecting() {
 
-						connection.close();
-						
-					  });
-					  
-					  var query = JSON.parse(songJson);
-					  
-					  	var id = query.id;
-						var lib =query.lib;
-						var name = query.title;
-						var artist = query.artist;
-						var album = query.album;
-						var year = query.year;
-						var Lyrics = query.lyrics;
-						var Path = query.path;
-						var genre = query.genre;
+    var script = 'USE [master] if exists(select * from sysdatabases where name = \'OdysseyDB\' ) DROP DATABASE [OdysseyDB]';
 
-						request.addParameter( 'id',TYPES.Int, id);
-						request.addParameter( 'lib',TYPES.VarChar, lib);
-						request.addParameter( 'name',TYPES.VarChar, name);
-						request.addParameter( 'artist',TYPES.VarChar, artist);
-						request.addParameter( 'album',TYPES.VarChar, album);
-						request.addParameter( 'year',TYPES.VarChar, year);
-						request.addParameter( 'Lyrics',TYPES.VarChar, Lyrics);
-						request.addParameter( 'Path',TYPES.VarChar, Path);
-						request.addParameter( 'gen',TYPES.VarChar, genre);
-						
 
-						connection.callProcedure(request);
-						
-						}
+    var connection = new Connection(config2);
+
+    connection.on('connect', function (err) {
+        executeStatement();
+    });
+
+
+
+    function executeStatement() {
+
+        request = new Request(script, function (err, rowCount) {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log(rowCount + ' rows');
+                createDB();
+            }
+
+            connection.close();
+        });
+
+        connection.execSql(request);
+    }
+
+
+
+
+}
+
+function createDB() {
+    console.log("here");
+    var create = 'CREATE DATABASE [OdysseyDB]';
+
+    var connection = new Connection(config2);
+
+    connection.on('connect', function (err) {
+        executeStatement();
+    });
+
+    function executeStatement() {
+
+        request = new Request(create, function (err, rowCount) {
+            if (err) {
+
+                console.log(err);
+            } else {
+                console.log(rowCount + ' rows');
+                initialize();
+            }
+
+            connection.close();
+        });
+
+        connection.execSql(request);
+    }
+
 
 }
 
 
-function new_lib(name){
-	
+function insert_song(songJson) {
 
-			  var connection = new Connection(config);
 
-			  connection.on('connect', function(err) {
-				  executeStatement();
-				  
-				}
-				);
-				
-				
-				function executeStatement() {
-					  request = new Request("new_lib", function(err) {
-						if (err) {
-						  console.log(err);
-						} 
+    var connection = new Connection(config);
 
-						else{
-						}
-						connection.close();
-					  });
-					  
-						request.addParameter( 'lib',TYPES.VarChar,name);
+    connection.on('connect', function (err) {
+        executeStatement();
 
-						connection.callProcedure(request);
-						}
+    });
 
-}
 
-function drop_song(id){
+    function executeStatement() {
+        request = new Request("insert_song1", function (err) {
+            if (err) {
+                console.log(err);
+            } else {
+                insert_song2(songJson);
+            }
 
-			var connection = new Connection(config);
+            connection.close();
 
-			  connection.on('connect', function(err) {
-				  executeStatement();
-				}
-				);
-				
-				
-				function executeStatement() {
-						console.log('entre');
-					  request = new Request("drop_song", function(err) {
-						if (err) {
-						  console.log(err);
-						} 
+        });
 
-						connection.close();
-					  });
-					  
-						request.addParameter( 'id',TYPES.VarChar,id);
+        var query = JSON.parse(songJson);
 
-						connection.callProcedure(request);
-						}
 
-}
+        var lib = query.lib;
+        //console.log(lib);
+        var name = query.title;
+        var artist = query.artist;
+        var album = query.album;
+        var year = query.year;
+        var Lyrics = query.lyrics;
+        var Path = query.path;
+        var genre = query.genre;
 
-function update_song(songJson){
+        request.addParameter('lib', TYPES.VarChar, lib);
+        request.addParameter('name', TYPES.VarChar, name);
+        request.addParameter('artist', TYPES.VarChar, artist);
+        request.addParameter('album', TYPES.VarChar, album);
+        request.addParameter('year', TYPES.VarChar, year);
+        request.addParameter('Lyrics', TYPES.VarChar, Lyrics);
+        request.addParameter('Path', TYPES.VarChar, Path);
+        request.addParameter('gen', TYPES.VarChar, genre);
 
-			var connection = new Connection(config);
 
-			connection.on('connect', function(err) {
-				executeStatement();
-				}
-				);
-				
-				
-				function executeStatement() {
-						console.log('entre');
-					  request = new Request("update_song", function(err) {
-						if (err) {
-						  console.log(err);
-						} 
+        connection.callProcedure(request);
 
-						connection.close();
-					  });
-					  
-					  var query = JSON.parse(songJson);
-					  
-						
-						var lib =query.lib;
-						var title = query.title;
-						var artist = query.artist;
-						var album = query.album;
-						var year = query.year;
-						var Lyrics = query.lyrics;
-						var id = query.id;
-						var genre = query.genre;
-					  
-
-						request.addParameter( 'lib',TYPES.VarChar, lib);
-						request.addParameter( 'name',TYPES.VarChar, title);
-						request.addParameter( 'artist',TYPES.VarChar, artist);
-						request.addParameter( 'album',TYPES.VarChar, album);
-						request.addParameter( 'year',TYPES.VarChar, year);
-						request.addParameter( 'Lyrics',TYPES.VarChar, Lyrics);
-						request.addParameter( 'id',TYPES.Int, id);
-						request.addParameter( 'gen',TYPES.VarChar, genre);
-
-						connection.callProcedure(request);
-						
-						}
+    }
 
 }
 
 
-function re_song_data(id,fn){
-	
+function insert_song2(songJson) {
 
-			  var connection = new Connection(config);
-			  var query = 'SELECT D.Path_Data FROM Data as D WHERE Song_ID='+id;
 
-			  connection.on('connect', function(err) {
-				  executeStatement(function(result){
-					fn(result);	
-				});
-				});
-				
-				
-				function executeStatement(fn2) {
-					  request = new Request(query, function(err) {
-						if (err) {
-						  console.log(err);
-						} 
-						else{
-						}
+    var connection = new Connection(config);
 
-						connection.close();
-						
-					  });
+    connection.on('connect', function (err) {
+        executeStatement();
 
-					  var result = '';
+    });
 
-						request.on('row', function(columns) {
-					columns.forEach(function(column) {
-					  if (column.value === null) {
-						console.log('NULL');
-					  } else {
-						result = column.value;
-					  }
-					});
-					
-				  });
 
-				  request.on('doneInProc', function(rowCount, more) {
-					console.log(rowCount + ' rows returned');
-					fn2(result);
-				  });
+    function executeStatement() {
+        request = new Request("insert_song2", function (err) {
+            if (err) {
+                console.log(err);
+            }
 
-				  connection.execSql(request);
-						
-						}
+            connection.close();
+            //printTable();
+        });
+
+
+        var query = JSON.parse(songJson);
+
+        var name = query.title;
+        var artist = query.artist;
+        var Path = query.path;
+
+        request.addParameter('name', TYPES.VarChar, name);
+        request.addParameter('artist', TYPES.VarChar, artist);
+        request.addParameter('Path', TYPES.VarChar, Path);
+
+
+        connection.callProcedure(request);
+
+    }
 
 }
-var dios = [];
-function re_songs(lib, fn){
-			var lista = [];
 
-			  var connection = new Connection(config);
-			  var query = 'SELECT S.Song_ID,S.Song_Name,S.Song_Artist,S.Song_Album,S.Song_Year,S.Song_Gen,S.Lyrics FROM Songs as S WHERE Lib_name=\''+lib+'\'';
 
-			  connection.on('connect', function(err) {
-				executeStatement(function(result){
-					fn(result);	
-				});
-				
-				
-				});
 
-			  		function executeStatement(fn2){
+function insert_song_withID(songJson) {
 
-			  	   	var  request = new Request(query, function(err) {
-						if (err) {
-						  console.log(err);
-						} 
-						else{
-						}
-						connection.close();
-					  });
- 						
-					  	
-					  
-					   request.on('row', function(columns) {
-								//console.log(columns);
-								var object = new makeJson(columns);
-								lista.push(object);
-					
-				  		});
 
-						
-				  request.on('doneInProc', function(rowCount, more, rows) {
-					console.log(rowCount + ' rows returned');
-					fn2(lista);
-					
-				  });
+    var connection = new Connection(config);
 
-		connection.execSql(request);
-		
+    connection.on('connect', function (err) {
+        executeStatement();
+
+    });
+
+
+    function executeStatement() {
+        request = new Request("insert_song_withID", function (err) {
+            if (err) {
+                console.log(err);
+            } else {
+                insert_song2(songJson);
+            }
+
+            connection.close();
+
+        });
+
+        var query = JSON.parse(songJson);
+
+        var id = query.id;
+        var lib = query.lib;
+        var name = query.title;
+        var artist = query.artist;
+        var album = query.album;
+        var year = query.year;
+        var Lyrics = query.lyrics;
+        var Path = query.path;
+        var genre = query.genre;
+
+        console.log(Path);
+
+        request.addParameter('id', TYPES.Int, id);
+        request.addParameter('lib', TYPES.VarChar, lib);
+        request.addParameter('name', TYPES.VarChar, name);
+        request.addParameter('artist', TYPES.VarChar, artist);
+        request.addParameter('album', TYPES.VarChar, album);
+        request.addParameter('year', TYPES.VarChar, year);
+        request.addParameter('Lyrics', TYPES.VarChar, Lyrics);
+        request.addParameter('Path', TYPES.VarChar, Path);
+        request.addParameter('gen', TYPES.VarChar, genre);
+
+
+        connection.callProcedure(request);
+
+    }
 
 }
-			 
-				
+
+
+function new_lib(name) {
+
+
+    var connection = new Connection(config);
+
+    connection.on('connect', function (err) {
+        executeStatement();
+
+    });
+
+
+    function executeStatement() {
+        request = new Request("new_lib", function (err) {
+            if (err) {
+                console.log(err);
+            } else {}
+            connection.close();
+        });
+
+        request.addParameter('lib', TYPES.VarChar, name);
+
+        connection.callProcedure(request);
+    }
+
 }
 
-function makeJson(columns){
-		var json = {
-								"title":columns[1].value,
-								"artist":columns[2].value,
-								"album":columns[3].value,
-								"year":columns[4].value,
-								"lyrics":columns[5].value,
-								"genre":columns[6].value,
-								"id":columns[0].value
-							}
-		
-		return json;
+function drop_song(id) {
+
+    var connection = new Connection(config);
+
+    connection.on('connect', function (err) {
+        executeStatement();
+    });
+
+
+    function executeStatement() {
+        console.log('entre');
+        request = new Request("drop_song", function (err) {
+            if (err) {
+                console.log(err);
+            }
+
+            connection.close();
+        });
+
+        request.addParameter('id', TYPES.VarChar, id);
+
+        connection.callProcedure(request);
+    }
+
+}
+
+function update_song(songJson) {
+
+    var connection = new Connection(config);
+
+    connection.on('connect', function (err) {
+        executeStatement();
+    });
+
+
+    function executeStatement() {
+        console.log('entre');
+        request = new Request("update_song", function (err) {
+            if (err) {
+                console.log(err);
+            }
+
+            connection.close();
+        });
+
+        var query = JSON.parse(songJson);
+
+        var lib = query.lib;
+        var title = query.title;
+        var artist = query.artist;
+        var album = query.album;
+        var year = query.year;
+        var Lyrics = query.lyrics;
+        var id = query.id;
+        var genre = query.genre;
+
+        console.log(artist);
+        console.log(album);
+        console.log(year);
+        console.log(lib);
+        console.log(id);
+        console.log(title);
+
+        request.addParameter('lib', TYPES.VarChar, lib);
+        request.addParameter('name', TYPES.VarChar, title);
+        request.addParameter('artist', TYPES.VarChar, artist);
+        request.addParameter('album', TYPES.VarChar, album);
+        request.addParameter('year', TYPES.VarChar, year);
+        request.addParameter('Lyrics', TYPES.VarChar, Lyrics);
+        request.addParameter('id', TYPES.Int, id);
+        request.addParameter('gen', TYPES.VarChar, genre);
+
+        connection.callProcedure(request);
+
+    }
+
+}
+
+
+function re_song_data(id, fn) {
+
+
+    var connection = new Connection(config);
+    var query = 'SELECT D.Path_Data FROM Data as D WHERE Song_ID=' + id;
+
+    connection.on('connect', function (err) {
+        executeStatement(function (result) {
+            fn(result);
+        });
+    });
+
+
+    function executeStatement(fn2) {
+        request = new Request(query, function (err) {
+            if (err) {
+                console.log(err);
+            } else {}
+
+            connection.close();
+
+        });
+
+        var result = '';
+
+        request.on('row', function (columns) {
+            columns.forEach(function (column) {
+                if (column.value === null) {
+                    console.log('NULL');
+                } else {
+                    result = column.value;
+                }
+            });
+
+        });
+
+        request.on('doneInProc', function (rowCount, more) {
+            console.log(rowCount + ' rows returned');
+            fn2(result);
+        });
+
+        connection.execSql(request);
+
+    }
+
+}
+
+
+
+function re_songs_withBlob(lib, fn) {
+
+
+    var lista = [];
+
+    var connection = new Connection(config);
+    var query = 'SELECT S.Song_ID,S.Song_Name,S.Song_Artist,S.Song_Album,S.Song_Year,S.Song_Gen,S.Lyrics,D.Path_Data FROM Songs as S INNER JOIN Data as D ON S.Song_ID = D.Song_ID WHERE Lib_name=\'' + lib + '\'';
+
+    connection.on('connect', function (err) {
+        executeStatement(function (result) {
+            fn(result);
+        });
+
+
+    });
+
+    function executeStatement(fn2) {
+
+        var request = new Request(query, function (err) {
+            if (err) {
+                console.log(err);
+            } else {}
+            connection.close();
+        });
+
+
+
+        request.on('row', function (columns) {
+            //console.log(columns);
+            var object = new makeJson_withBlob(columns);
+            lista.push(object);
+
+        });
+
+
+        request.on('doneInProc', function (rowCount, more, rows) {
+            console.log(rowCount + ' rows returned');
+            fn2(lista);
+
+        });
+
+        connection.execSql(request);
+
+
+    }
+
+
+}
+
+function makeJson_withBlob(columns) {
+    var json = {
+        "title": columns[1].value,
+        "artist": columns[2].value,
+        "album": columns[3].value,
+        "year": columns[4].value,
+        "lyrics": columns[6].value,
+        "genre": columns[5].value,
+        "id": String(columns[0].value),
+        "blob": encode(columns[7].value)
+
+    }
+
+    return json;
+}
+
+
+
+
+function encode(file) {
+    var fs = require('fs');
+    // read binary data
+    var binary_blob = fs.readFileSync(file);
+    // convert binary data to base64 encoded string
+    return new Buffer(binary_blob).toString('base64');
+}
+
+
+
+function re_songs(lib, fn) {
+    var lista = [];
+
+    var connection = new Connection(config);
+    var query = 'SELECT S.Song_ID,S.Song_Name,S.Song_Artist,S.Song_Album,S.Song_Year,S.Song_Gen,S.Lyrics FROM Songs as S WHERE Lib_name=\'' + lib + '\'';
+
+    connection.on('connect', function (err) {
+        executeStatement(function (result) {
+            fn(result);
+        });
+
+
+    });
+
+    function executeStatement(fn2) {
+
+        var request = new Request(query, function (err) {
+            if (err) {
+                console.log(err);
+            } else {}
+            connection.close();
+        });
+
+
+
+        request.on('row', function (columns) {
+            //console.log(columns);
+            var object = new makeJson(columns);
+            lista.push(object);
+
+        });
+
+
+        request.on('doneInProc', function (rowCount, more, rows) {
+            console.log(rowCount + ' rows returned');
+            fn2(lista);
+
+        });
+
+        connection.execSql(request);
+
+
+    }
+
+
+}
+
+function makeJson(columns) {
+    var json = {
+        "title": columns[1].value,
+        "artist": columns[2].value,
+        "album": columns[3].value,
+        "year": columns[4].value,
+        "lyrics": columns[6].value,
+        "genre": columns[5].value,
+        "id": String(columns[0].value)
+    }
+
+    return json;
+}
+
+
+// parte de nodeBrainz
+
+
+var NB = require('nodebrainz');
+
+
+
+
+
+
+function Brainz_Sync(lib) {
+
+    var biblioteca;
+    re_songs(lib, function (result) {
+        // retorna un Json array con todas las canciones de la biblioteca lib (result contiene el valor del return) 
+        biblioteca = result;
+
+        biblioteca.forEach(function (songJson) {
+
+            getInfo(songJson.title, function (result2) {
+                try {
+                    var song = {
+
+                        "title": songJson.title,
+                        "artist": result2.artist,
+                        "album": result2.album,
+                        "year": result2.year,
+                        "lyrics": songJson.lyrics,
+                        "genre": songJson.genre,
+                        "id": songJson.id,
+                        "lib": lib
+
+                    };
+
+                    update_song(JSON.stringify(song));
+                } catch (err) {
+                    console.log("Do");
+                }
+
+
+            });
+
+        });
+
+    });
+
+
+
+}
+
+
+function getInfo(SongName, fn) {
+
+    //Initialize NodeBrainz 
+    var nb = new NB({
+        userAgent: 'my-awesome-app/0.0.1 ( http://my-awesome-app.com)'
+    });
+
+    nb.search('recording', {
+        recording: SongName
+    }, function (err, response) {
+        
+        try{
+
+        //console.log(response);
+        var prueba = response.recordings[0].id;
+
+        //console.log(response.recordings[0].releases[0]);
+
+
+        nb.recording(prueba, {
+            inc: 'artists+releases'
+        }, function (err, response) {
+
+
+            var year = response['releases'][0].date.substring(0, 4);
+            var album = response['releases'][0].title;
+            var artist = response['artist-credit'][0].name;
+
+
+            var json = {
+                "album": album,
+                "artist": artist,
+                "year": year
+
+            };
+
+            fn(json);
+
+
+            // console.log(response);
+        });
+        //console.log(prueba);
+        }
+        catch(err){
+            fn(null);
+        }
+    });
+
 }
 
 
 
 /*
+
 
 
 // *********************************************** funciones disponibles ****************************************************
@@ -723,11 +894,16 @@ re_song_data(id, function(result){
 re_songs(lib, function(result){
 													 // retorna un Json array con todas las canciones de la biblioteca lib (result contiene el valor del return) 
 	console.log(result);
-});                                        
+});              
 
+
+function re_songs_withBlobs(lib,function(result){   // retorna un Json array con todas las canciones de la biblioteca lib incluido el blob (result contiene el valor del return)
+
+	console.log(result);
+
+}); 
 
 
 // *********************************************** funciones disponibles ****************************************************
 
 */
-

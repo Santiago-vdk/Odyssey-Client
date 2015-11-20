@@ -34,14 +34,11 @@ function login() {
             localStorage["username"] = user;
             localStorage["token"] = info.token;
             try {
-                
-                //COREGIR
-                //connecting();
-               new_lib("1");
-                
-                initializeLocal();
+
+                connecting(); //Inicializa la base de datos local
+                initializeLocal(); //Inicializa las carpetas locales
+                localStorage["localSync"] = false;
                 window.location.href = "dashboard.html";
-                localStorage["firstLocalSync"] = false;
                 return false;
             } catch (err) {
                 console.log(err);
@@ -226,7 +223,7 @@ function deleteAccount(username, password) {
     function result(hashedPassword) {
         request({
             method: 'DELETE',
-            url: localStorage.server + 'api/v1/users/' + username,
+            url: localStorage.server + 'api/v1/users/' + username + '?type=account',
             headers: {
                 'content-type': 'application/json'
             },

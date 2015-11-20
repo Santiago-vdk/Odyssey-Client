@@ -22,31 +22,57 @@ $(document).ready(function () {
 
 });
 
-function commitLocal(data) {
-    var parsed = JSON.parse(data);
-    
-    processItems(parsed);
+//Update items
+function updateLocal(data){
+    updateItems(data);
 }
+
+
+function asynchFuncUpdate(n, fn) {
+    //console.log(n);
+    update_song(JSON.stringify(n));
+    
+    setTimeout(fn, n);
+}
+
+
+function updateItems(items) {
+    var i = 0,
+        length = items.length,
+        fn = function () {
+            if (i < length) {
+                asynchFuncUpdate(items[i], fn);
+
+                i++;
+            }
+        };
+    fn();
+}
+
+
+
+//Commit items
+function commitLocal(data) {
+    //var parsed = JSON.parse(data);
+    processItems(data);
+}
+
 function asynchFunc(n, fn) {
-    console.log(n);
+    //console.log(n);
     insert_song(JSON.stringify(n));
     setTimeout(fn, n);
 }
 
 
 function processItems(items) {
-        console.log("fuck");
-
     var i = 0,
         length = items.length,
-        fn = function() {
-            if(i < length) {
+        fn = function () {
+            if (i < length) {
                 asynchFunc(items[i], fn);
-                
+
                 i++;
             }
         };
-
     fn();
 }
-

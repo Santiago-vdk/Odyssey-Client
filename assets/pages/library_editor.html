@@ -6,6 +6,7 @@
 <link href="assets/css/bootstrap.min.css" rel="stylesheet">
 <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
 <script src="assets/js/bootbox.min.js"></script> -->
+<script src="assets/js/sql.js"></script>
 <style>
     ::-webkit-scrollbar {
         width: 15px;
@@ -16,9 +17,7 @@
         background-color: rgba(0, 0, 0, 0.2);
     }
     
-    .ng-scope {
-        height: 93%;
-    }
+    
     
     @import "compass/css3";
     .table-editable {
@@ -63,95 +62,60 @@
 
 
 <script>
-    $(document).ready(function() {
-        var $TABLE = $('#table');
-        var $BTN = $('#export-btn');
-        var $EXPORT = $('#export');
+    var $TABLE = $('#table');
+    var $BTN = $('#export-btn');
+    var $EXPORT = $('#export');
 
-        $('.table-add').click(function() {
-            /* var $clone = $TABLE.find('tr.hide').clone(true).removeClass('hide table-line');
-           
-             $TABLE.find('table').append($clone);*/
-            updateSongTable();
+    jQuery.fn.pop = [].pop;
+    jQuery.fn.shift = [].shift;
+
+    $BTN.click(function() {
+
+        $('#loading').addClass('open');
+
+        var $rows = $TABLE.find('tr:not(:hidden)');
+        var headers = [];
+        var data = [];
+        
+        // Get the headers (add special header logic here)
+        $($rows.shift()).find('th:not(:empty)').each(function() {
+            headers.push($(this).text().toLowerCase());
         });
 
+        // Turn all existing rows into a loopable array
+        $rows.each(function() {
+            var $td = $(this).find('td');
+            var h = {};
 
-
-
-        /*
-                $('.table-up').click(function() {
-                    var $row = $(this).parents('tr');
-                    if ($row.index() === 1) return; // Don't go above the header
-                    $row.prev().before($row.get(0));
-                });
-
-                $('.table-down').click(function() {
-                    var $row = $(this).parents('tr');
-                    $row.next().after($row.get(0));
-                });
-        */
-        // A few jQuery helpers for exporting only
-        jQuery.fn.pop = [].pop;
-        jQuery.fn.shift = [].shift;
-
-        $BTN.click(function() {
-            $('#loading').addClass('open');
-
-
-            var $rows = $TABLE.find('tr:not(:hidden)');
-            var headers = [];
-            var data = [];
-
-            // Get the headers (add special header logic here)
-            $($rows.shift()).find('th:not(:empty)').each(function() {
-                headers.push($(this).text().toLowerCase());
+            // Use the headers from earlier to name our hash keys
+            headers.forEach(function(header, i) {
+                
+                h[header] = $td.eq(i).text();
+                
             });
-
-            // Turn all existing rows into a loopable array
-            $rows.each(function() {
-                var $td = $(this).find('td');
-                var h = {};
-
-                // Use the headers from earlier to name our hash keys
-                headers.forEach(function(header, i) {
-
-                    h[header] = $td.eq(i).text();
-
-                });
-
-                data.push(h);
-            });
-
-
-            $('#loading').removeClass('open');
-
-            // Output the result
-            $EXPORT.text(JSON.stringify(data));
-
-
-            //  commitLocal(localStorage.data);
-
-
-            /*   
-            var data = localStorage["data"];
-            var parsed = JSON.parse(data);
+            
             
 
-            for (var i = 0; i < parsed.length; i++) {
-                //Insercion en BD local
-            }
-*/
-
-
+            data.push(h);
         });
 
 
+        $('#loading').removeClass('open');
 
+        // Output the result
+        $EXPORT.text(JSON.stringify(data));
+     
+        updateLocal(data);
+        
     });
 
     function removeRow(rkt) {
-
+        
+        var localID = $(rkt).closest('tr').find('.localid').text();
+        console.log("Erasing local song: " + localID);
+        drop_song(localID);
         $(rkt).closest('tr').detach();
+        
     }
 </script>
 
@@ -171,9 +135,8 @@
                     <th>Year</th>
                     <th>Genre</th>
                     <th>Lyrics</th>
-
-                    <th class="hidden">Path</th>
                     <th class="hidden">Lib</th>
+                    <th class="hidden">id</th>
                     <th></th>
                 </tr>
 
@@ -183,19 +146,11 @@
                     <td contenteditable="true">{{x.album}}</td>
                     <td contenteditable="true">{{x.year}}</td>
                     <td contenteditable="true">{{x.genre}}</td>
-                    <td contenteditable="true">{{x.lyrics}}</a>
-                    </td>
-                    <td class="hidden">{{x.path}}</a>
-                    </td>
-                    <td class="hidden">{{x.lib}}</a>
-                    </td>
-
+                    <td contenteditable="true">{{x.lyrics}}</td>
+                    <td class="hidden">1</td>
+                    <td class="hidden localid">{{x.id}}</td>
                     <td><span onclick="removeRow(this)" class="table-remove fa fa-times"></span></td>
-
                 </tr>
-
-
-
             </table>
         </div>
 
