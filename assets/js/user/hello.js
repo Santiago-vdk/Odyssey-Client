@@ -72,10 +72,13 @@ app.controller('RandomMessage', function ($scope, $http) {
 });
 
 app.controller('Recomendations', function ($scope, $http) {
+    var json = {
+        "username": localStorage.username
+    }
     $http({
-        url: localStorage.server + 'api/v1/tools/recomendations',
+        url: localStorage.server + 'api/v1/tools/recomendations/?type=friends',
         method: 'POST',
-        data: localStorage.query,
+        data: JSON.stringify(json),
         dataType: "json",
         headers: {
             'Content-Type': 'application/json'
@@ -83,21 +86,16 @@ app.controller('Recomendations', function ($scope, $http) {
     }).
     success(function (data) {
         $scope.recomendations = data;
+        if (!$scope.$$phase) {
+            $scope.$apply();
+        }
     });
 });
 
 
 app.controller('Search', function ($scope, $http) {
-    $http({
-        url: localStorage.server + 'api/v1/tools/search',
-        method: 'POST',
-        data: localStorage.query,
-        dataType: "json",
-        headers: {
-            'Content-Type': 'application/json'
-        }
 
-    }).
+    $http.get(localStorage.server + 'api/v1/tools/search/?query=' + localStorage.search).
     success(function (data) {
         $scope.search = data;
     });
@@ -142,6 +140,13 @@ app.controller('EditorCtrl', function ($scope, $timeout) {
         localStorage["tempLib"] = JSON.stringify(result);
         $scope.$apply();
     });
+
+
+    $scope.externalSync = function () {
+        console.log("brainz");
+        Brainz_Sync("1");
+    };
+
 });
 
 
@@ -153,6 +158,8 @@ app.controller('DragController', function ($scope) {
 
 app.controller('ProfileCtrl', function ($routeParams, $http, $scope) {
     $scope.userid = $routeParams.userid;
+    
+    localStorage["currentUser"] = $scope.userid;
 
     $http.get(localStorage.server + 'api/v1/users/' + $scope.userid + '?type=profile').
     success(function (data) {
@@ -175,11 +182,6 @@ app.controller('LibraryCtrl', function ($routeParams, $http, $scope) {
         }
     };
 
-    $scope.externalSync = function () {
-        console.log("brainz");
-        Brainz_Sync("1");
-    };
-
     $scope.isFriend = function (lib_user) {
         //  return true;
 
@@ -188,8 +190,8 @@ app.controller('LibraryCtrl', function ($routeParams, $http, $scope) {
              console.log(data.statusCode);
              return true;
          });*/
-
     }
+
 
     $scope.addFriend = function (lib_user) {
         //lib_user, due;o de la biblioteca que estoy viendo
@@ -306,16 +308,30 @@ app.controller('LibraryCtrl', function ($routeParams, $http, $scope) {
 
     }
 
+
+
+    localStorage.removeItem('friend');
+    $http.get(localStorage.server + 'api/v1/users/' + localStorage.username + '/?type=friends&with=' + $scope.userid).
+    success(function (data) {
+        if (data.friends == true) {
+            localStorage["friend"] = "true";
+        }
+        if (data.friends == false) {
+            localStorage["friend"] = "false";
+        }
+    });
+
     $http.get(localStorage.server + 'api/v1/users/' + $scope.userid + '/libraries/' + $scope.libraryid + '?type=lib').
     success(function (data) {
         $scope.library = data;
-
     });
 });
 
 
+app.controller('AreWeFriendsCtrl', function ($routeParams, $http, $scope, $timeout) {
+    $scope.friend = localStorage.friend;
 
-
+});
 
 app.controller('SongCtrl', function ($routeParams, $http, $scope) {
     $scope.userid = $routeParams.userid;
@@ -330,13 +346,21 @@ app.controller('SongCtrl', function ($routeParams, $http, $scope) {
 
 
     $scope.streamSong = function (globalid, owner) {
-        var endpoint = localStorage.server + 'api/v1/users/' + owner + '/libraries/1/songs/' + globalid + '/stream';
-        
+
+        var endpoint = localStorage.server + 'api/v1/users/' + $scope.userid + '/libraries/1/songs/' + $scope.songid + '/stream/?for=' + localStorage.username;
+
+        console.log("Hearing stream, " + endpoint);
         var audio = document.getElementById('music-player');
-        audio.pause();
+
+
+        //audio.setAttribute('data',"Playing song with ID: " + $scope.songid);
+
         audio.setAttribute('src', endpoint);
-        audio.play(); //call this to play the song right away
-    
+        audio.pause();
+        audio.load(); //suspends and restores all audio element
+
+        audio.play();
+
     }
 
     $scope.postComment = function (globalid, owner) {
@@ -392,6 +416,20 @@ app.controller('CurrentlyPlayingCtrl', function ($scope) {
     $scope.song = $("#music-player").attr('data');
 
 });
+
+app.controller('FriendListCtrl', function ($http,$scope) {
+
+    $http.get(localStorage.server + 'api/v1/users/' + localStorage.currentUser + '/?type=friendlist').
+    success(function (data) {
+
+        $scope.data = data;
+    });
+
+
+});
+
+
+
 
 app.controller('LyricsCtrl', function ($http, $scope) {
     $scope.showLyrics = function (userid, songid) {
@@ -615,13 +653,13 @@ app.controller('UserMenuCtrl2', function ($http, $scope, $q) {
 
     //Sube las canciones locales al servidor de odyssey
     $scope.cloudSync = function () {
-        re_songs("1", function (result) {
+        re_songs("1", function (resultCamino) {
 
             // retorna un Json array con todas las canciones de la biblioteca lib (result contiene el valor del return) 
             $http({
                 url: localStorage.server + 'api/v1/users/' + localStorage.username + '/libraries/1',
                 method: 'PUT',
-                data: result,
+                data: resultCamino,
                 dataType: "json",
                 headers: {
                     'Content-Type': 'application/json'
@@ -629,35 +667,55 @@ app.controller('UserMenuCtrl2', function ($http, $scope, $q) {
             }).
             success(function (data) {
 
-                re_songs_withBlob("1", function (result) {
-                    $scope.responses = [];
-                    $scope.doneLoading = false;
+                //  re_songs_withBlob("1", function (result) {
+                $scope.responses = [];
+                $scope.doneLoading = false;
 
-                    var urls = data;
-                    var i = 0;
-                    var promise = $q.all(null);
-                    angular.forEach(urls, function (url) {
-                        console.log(url);
-                        if (url.method != "NONE") {
-                            //No lleva el blob
-                            if (url.method == "PUT") {
-                                re_songs("1", function (result) {
-                                    promise = promise.then(function () {
-                                        return $http({
-                                            method: url.method,
-                                            url: url.url,
-                                            data: JSON.stringify(result[i])
-                                        }).then(function (res) {
-                                            console.log("Solicitud lista!");
-                                            $scope.responses.push(res.data);
-                                            i++;
-                                        });
-                                    });
+                var urls = data;
+                var i = 0;
+                var promise = $q.all(null);
+
+                console.log("------------------------------------------------");
+                console.log(resultCamino);
+                console.log("------------------------------------------------");
+                console.log(urls);
+
+                angular.forEach(urls, function (url) {
+
+                    if (url.method != "NONE") {
+                        //No lleva el blob
+                        if (url.method == "PUT") {
+                            console.log("PUT");
+                            console.log(resultCamino[i].title);
+                            console.log(resultCamino[i].id);
+
+                            //  re_songs("1", function (result1) {
+
+                            promise = promise.then(function () {
+                                return $http({
+                                    method: url.method,
+                                    url: url.url,
+                                    data: JSON.stringify(resultCamino[i])
+                                }).then(function (res) {
+                                    console.log("Solicitud lista!");
+                                    $scope.responses.push(res.data);
+                                    i++;
                                 });
-                            }
-                            //Si lleva el blob
-                            else if (url.method == "POST") {
-                                promise = promise.then(function () {
+                            });
+
+                            // });
+
+                        }
+
+                        //Si lleva el blob
+                        else if (url.method == "POST") {
+
+                            promise = promise.then(function () {
+
+                                re_songs_withBlob("1", function (result) {
+                                    console.log("POST");
+                                    console.log(result[i].title);
+                                    console.log(result[i].id);
                                     return $http({
                                         method: url.method,
                                         url: url.url,
@@ -668,29 +726,35 @@ app.controller('UserMenuCtrl2', function ($http, $scope, $q) {
                                         i++;
                                     });
                                 });
-                            }
-                            //Si se debe borrar la cancion
-                            else if (url.method == "DELETE") {
-                                promise = promise.then(function () {
-                                    return $http({
-                                        method: url.method,
-                                        url: url.url,
-                                    }).then(function (res) {
-                                        console.log("Solicitud lista!");
-                                        $scope.responses.push(res.data);
-                                        i++;
-                                    });
-                                });
-                            }
 
+                            });
                         }
 
-                    });
-                    promise.then(function () {
-                        //This is run after all of your HTTP requests are done
-                        console.log("done");
-                    });
+                        //Si se debe borrar la cancion
+                        else if (url.method == "DELETE") {
+                            promise = promise.then(function () {
+                                return $http({
+                                    method: url.method,
+                                    url: url.url,
+                                }).then(function (res) {
+                                    console.log("Solicitud lista!");
+                                    $scope.responses.push(res.data);
+                                    i++;
+                                });
+                            });
+                        }
+
+                    } else {
+                        i++;
+                    }
+
+
                 });
+                promise.then(function () {
+                    //This is run after all of your HTTP requests are done
+                    console.log("done");
+                });
+                //   });
 
 
             });

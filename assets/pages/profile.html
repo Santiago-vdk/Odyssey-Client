@@ -21,7 +21,7 @@
 
 <style>
     .ng-scope {
-       /* height: 100%;*/
+        /* height: 100%;*/
     }
     /* USER PROFILE PAGE */
     
@@ -120,7 +120,8 @@
     .main-box.no-header {
         padding-top: 20px;
     }
-      .main-box {
+    
+    .main-box {
         background: #FFFFFF;
         -webkit-box-shadow: 1px 1px 2px 0 #CCCCCC;
         -moz-box-shadow: 1px 1px 2px 0 #CCCCCC;
@@ -132,7 +133,6 @@
         -moz-border-radius: 3px;
         border-radius: 3px;
     }
-  
     
     .table a.table-link.danger {
         color: #e74c3c;
@@ -156,11 +156,10 @@
         margin-left: 60px;
     }
     
-     a {
+    a {
         color: #3498db;
         outline: none!important;
     }
-   
     
     .user-list tbody td>img {
         position: relative;
@@ -168,8 +167,6 @@
         float: left;
         margin-right: 15px;
     }
-    
-    
     /* Pendiente de revisar el error con el side bar
      .table thead tr th{
         text-transform: uppercase;
@@ -191,8 +188,6 @@
         border-top: 1px solid #e7ebee;
         padding: 12px 8px;
     }*/
-    
-   
 </style>
 
 <body>
@@ -235,7 +230,7 @@
                 <div class="tab-content">
                     <div class="tab-pane fade in active" id="tab0">
                         <h3>Info</h3>
-                        <p>Cualquier informacion basura que pude encontrarme por ahi para forzar el div a expandirse y ajustarle las propiedades si es necesraio.</p>
+                        <p>Not much to say...</p>
                     </div>
                     <!-- DIV DE LABIBLIOYRVS<div class="tab-pane fade in" id="tab1">
                         <h3>ThThis1</h3>
@@ -256,119 +251,39 @@
                                 <div class="main-box no-header clearfix">
                                     <div class="main-box-body clearfix">
                                         <div class="table-responsive">
-                                            <table class="table user-list">
+                                            <table class="table user-list" ng-controller="FriendListCtrl">
                                                 <thead>
                                                     <tr>
-                                                        <th><span>User</span></th>
-                                                        <th><span>Created</span></th>
+                                                        <th><span>Friend</span></th>
                                                         <th class="text-center"><span>Status</span></th>
-                                                        <th><span>Email</span></th>
                                                         <th>&nbsp;</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr>
+                                                    <tr ng-repeat="x in data.friends">
                                                         <td>
-                                                            <img src="http://bootdey.com/img/Content/user_1.jpg" alt="">
-                                                            <a href="#" class="user-link">Full name 1</a>
-                                                            <span class="user-subhead">Member</span>
+                                                            <img ng-src="{{ 'http://api.adorable.io/avatars/285/' + x }}" alt="">{{x}}
                                                         </td>
-                                                        <td>2013/08/12</td>
+
                                                         <td class="text-center">
-                                                            <span class="label label-default">pending</span>
+                                                            <span class="label label-default">friends</span>
                                                         </td>
-                                                        <td>
-                                                            <a href="#">marlon@brando.com</a>
-                                                        </td>
+                                                       
                                                         <td style="width: 20%;">
-                                                            <a href="#" class="table-link">
+                                                            <a href="{{'#/profile/' + x }}" class="table-link">
                                                                 <span class="fa-stack">
                                                 <i class="fa fa-square fa-stack-2x"></i>
                                                 <i class="fa fa-search-plus fa-stack-1x fa-inverse"></i>
                                             </span>
                                                             </a>
-                                                            <a href="#" class="table-link">
-                                                                <span class="fa-stack">
-                                                <i class="fa fa-square fa-stack-2x"></i>
-                                                <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
-                                            </span>
-                                                            </a>
-                                                            <a href="#" class="table-link danger">
-                                                                <span class="fa-stack">
-                                                <i class="fa fa-square fa-stack-2x"></i>
-                                                <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
-                                            </span>
-                                                            </a>
+
+
+
+
                                                         </td>
                                                     </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <img src="http://bootdey.com/img/Content/user_3.jpg" alt="">
-                                                            <a href="#" class="user-link">Full name 2</a>
-                                                            <span class="user-subhead">Admin</span>
-                                                        </td>
-                                                        <td>2013/08/12</td>
-                                                        <td class="text-center">
-                                                            <span class="label label-success">Active</span>
-                                                        </td>
-                                                        <td>
-                                                            <a href="#">marlon@brando.com</a>
-                                                        </td>
-                                                        <td style="width: 20%;">
-                                                            <a href="#" class="table-link">
-                                                                <span class="fa-stack">
-                                                <i class="fa fa-square fa-stack-2x"></i>
-                                                <i class="fa fa-search-plus fa-stack-1x fa-inverse"></i>
-                                            </span>
-                                                            </a>
-                                                            <a href="#" class="table-link">
-                                                                <span class="fa-stack">
-                                                <i class="fa fa-square fa-stack-2x"></i>
-                                                <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
-                                            </span>
-                                                            </a>
-                                                            <a href="#" class="table-link danger">
-                                                                <span class="fa-stack">
-                                                <i class="fa fa-square fa-stack-2x"></i>
-                                                <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
-                                            </span>
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <img src="http://bootdey.com/img/Content/user_2.jpg" alt="">
-                                                            <a href="#" class="user-link">Full name 3</a>
-                                                            <span class="user-subhead">Member</span>
-                                                        </td>
-                                                        <td>2013/08/12</td>
-                                                        <td class="text-center">
-                                                            <span class="label label-danger">inactive</span>
-                                                        </td>
-                                                        <td>
-                                                            <a href="#">marlon@brando.com</a>
-                                                        </td>
-                                                        <td style="width: 20%;">
-                                                            <a href="#" class="table-link">
-                                                                <span class="fa-stack">
-                                                <i class="fa fa-square fa-stack-2x"></i>
-                                                <i class="fa fa-search-plus fa-stack-1x fa-inverse"></i>
-                                            </span>
-                                                            </a>
-                                                            <a href="#" class="table-link">
-                                                                <span class="fa-stack">
-                                                <i class="fa fa-square fa-stack-2x"></i>
-                                                <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
-                                            </span>
-                                                            </a>
-                                                            <a href="#" class="table-link danger">
-                                                                <span class="fa-stack">
-                                                <i class="fa fa-square fa-stack-2x"></i>
-                                                <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
-                                            </span>
-                                                            </a>
-                                                        </td>
-                                                    </tr>
+
+
                                                 </tbody>
                                             </table>
                                         </div>

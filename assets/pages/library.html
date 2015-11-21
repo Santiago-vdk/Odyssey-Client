@@ -244,14 +244,14 @@
                 <h2 style="margin:5;">Biblioteca #{{libraryid}}</h2>
                 <h3 style="margin:5;"> <small>{{userid}}'s library</small></h3>
                 <br>
-                <h4 style="margin:5;" class="ng-show" ng-show="currentUser(userid)" ng-click="externalSync()"><p><a class="btn btn-default btn-large" href="">External sync</a></p></h4>
+              <!--  <h4 style="margin:5;" class="ng-show" ng-show="currentUser(userid)" ng-click="externalSync()"><p><a class="btn btn-default btn-large" href="">External sync</a></p></h4>  -->
             </div>
             <div style="float:right">
                 <p style="text-align: right;"><span><a href="{{'#/profile/'+userid}}"><img alt="" ng-src="{{ 'http://api.adorable.io/avatars/285/' + userid}}"></a></span></p>
 
-                <h4 style="margin:5;text-align: right;"><p><a class="btn btn-success" href="" ng-click="addFriend(userid)"><i class="fa fa-user-plus"></i> Add friend</a></p></h4>
+                <h4 ng-controller="AreWeFriendsCtrl" style="margin:5;text-align: right;"><p><a ng-show="friend" class="btn btn-success" href="" ng-click="addFriend(userid)"><i class="fa fa-user-plus"></i> Add friend</a></p></h4>
 
-                <h4 style="margin:5;text-align: rigth;">  <p><a class="btn btn-danger" href="" ng-click="deleteFriend(userid)"><i class="fa fa-user-times"></i> Remove friend</a></p></h4>
+                <h4 ng-controller="AreWeFriendsCtrl" style="margin:5;text-align: rigth;">  <p><a ng-hide="friend" class="btn btn-danger" href="" ng-click="deleteFriend(userid)"><i class="fa fa-user-times"></i> Remove friend</a></p></h4>
             </div>
         </div>
 
@@ -283,9 +283,9 @@
                         <td contenteditable="false" class="id">{{x.id}}</td>
                         <td contenteditable="true" class="lyrics">{{x.lyrics}}</td>
                         <!--<td><a style="height:33px;" class="btn btn-default" href="" ng-click="showLyrics(userid,x.id)" ng-controller="LyricsCtrl"><i class="fa fa-book"></i> Lyrics</a></td> -->
-                        <td><a href="{{'#/song_info/' + userid + '/' + 1 + '/' + x.id}}"><i class="fa fa-play"></i></a></td>
-                        <td><a class="btn btn-success" href="" onclick="saveChanges(this)">Save</a></td>
-                        <td class="ng-show" ng-show="currentUser(userid)"><a class="btn btn-warning" href="" ng-click="changeVersion(x.id)">Version</a></td>
+                        <td ng-controller="AreWeFriendsCtrl"><a ng-hide="friend" href="{{'#/song_info/' + userid + '/' + 1 + '/' + x.id}}"><i class="fa fa-play"></i></a></td>
+                        <td ng-controller="AreWeFriendsCtrl"><a ng-hide="friend" class="btn btn-success" href=""  onclick="saveChanges(this)">Save</a></td>
+                        <td class="ng-show"><a ng-show="currentUser(userid)" class="btn btn-warning" href="" ng-click="changeVersion(x.id)">Version</a></td>
                     </tr>
 
                     <tr class="hide">

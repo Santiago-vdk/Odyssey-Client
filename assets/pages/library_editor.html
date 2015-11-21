@@ -124,6 +124,8 @@
 
 <body>
     <div class="wrapper" style="background: #F1F1F1;overflow-y: scroll;overflow-x: scroll;padding:10px;" ng-controller="EditorCtrl">
+        
+        <h4 style="margin:5;" class="ng-show" ng-show="currentUser(userid)" ng-click="externalSync()"><p><a class="btn btn-default btn-large" href="">External sync</a></p></h4>
 
         <div id="table" class="table-editable">
             <!-- <span class="table-add glyphicon glyphicon-plus"></span> -->

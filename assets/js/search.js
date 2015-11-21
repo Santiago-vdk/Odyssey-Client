@@ -19,11 +19,12 @@ $(document).ready(function () {
             var searchValue = $('#omni-text').val();
             console.log("Omnisearch go! " + searchValue);
             
-            var search = {
-                "query":searchValue
-            }
-            localStorage["search"] = JSON.stringify(search);
+            
+            
+            localStorage["search"] = searchValue;
+            
             window.location.href = "#/search";
+            window.location.reload();
             $('#search, #search button.close').removeClass('open');
             
         }

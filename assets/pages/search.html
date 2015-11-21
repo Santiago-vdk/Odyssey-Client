@@ -138,14 +138,14 @@
     <div class="tab-content">
 
         <div class="tab-pane result-area active" id="profile">
-            <h1>Search results (found:10)</h1>
+            <h1>Search results (found:{{search.count}})</h1>
             <ul class="list-unstyled press">
                 
-                <li class="{{x.type}}" ng-repeat="x in search">
+                <li class="{{x.type}}" ng-repeat="x in search.results">
                     <i class="{{'fa ' + 'fa-' + x.fa + ' fa-lg'}}"></i>
-                    <a href="#/search">{{x.type}} : {{x.title}}</a>
-                    <p><cite class="publishedAgency">DATE</cite> - <span class="publishedDate">Published 12/9/2014</span></p>
-                    <p class="summary">Beginner archers have an opportunity to test their skills at The Snowflake Shoot</p>
+                    <a href="{{'#/song_info/' + x.owner + '/1/' + x.globalid}}">{{x.type}} : {{x.title}}</a>
+                    <p><cite class="publishedAgency">DATE</cite> - <span class="publishedDate">Published {{x.date}}</span></p>
+                    <p class="summary">{{x.text}}</p>
                 </li>
                 
                 <!--

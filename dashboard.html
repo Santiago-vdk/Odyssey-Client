@@ -82,7 +82,7 @@
             <div class="progress center-block" style="width:800px;height:30px;">
                 <!-- set to certain width -->
                 <div class="progress-bar progress-bar-striped active" role="progressbar" id="loadingBar" style="width: 0%;">
-                    <span id="counter">0/3</span>
+                    <span id="counter"></span>
                 </div>
             </div>
         </div>
@@ -250,7 +250,15 @@
                     <!-- ng-src="{{ 'http://api.adorable.io/avatars/285/' + x.user }}" -->
 
                     <ul class="list-group">
-                        <li class="list-group-item" ng-repeat="x in me.friends"><a href="{{'#/profile/' + x.user }}">{{x.user}}<span><img alt="" ng-src="{{ 'http://api.adorable.io/avatars/285/' + x.user }}"></span></a></li>
+                        
+                        
+                        <li class="list-group-item" ng-repeat="x in me.friends">
+                            <a href="{{'#/profile/' + x.user }}">
+                            {{x.user}}<span><img alt="" ng-src="{{ 'http://api.adorable.io/avatars/285/' + x.user }}"></span>
+                        </a>
+                        </li>
+                        
+                        
                         <br>
                     </ul>
 
@@ -267,7 +275,7 @@
 
         <div class="player">
 
-            <audio id="music-player" src="" data="Dig up her bones - Misfits" type="audio/mpeg" preload="auto"></audio>
+            <audio id="music-player" data="" type="audio/mpeg" preload="auto"></audio>
             <!-- src="http://192.168.1.135:9080/OdysseyCloud/api/v1/users/1/libraries/1/songs/stream"-->
         </div>
     </div>

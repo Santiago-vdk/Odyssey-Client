@@ -91,7 +91,7 @@
                                 <li class="news-item" ng-repeat="x in recomendations">
                                     <table cellpadding="4">
                                         <tr>
-                                            <td><img ng-src="{{ 'http://api.adorable.io/avatars/285/' + x.user }}" width="10" class="img-circle" /></td>
+                                            <td><a href="{{'#/profile/' + x.user }}"><img ng-src="{{ 'http://api.adorable.io/avatars/285/' + x.user }}" width="10" class="img-circle" /></a></td>
                                             <td>{{x.user}}</td>
                                         </tr>
                                     </table>
